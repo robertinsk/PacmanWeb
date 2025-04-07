@@ -70,6 +70,7 @@
     var data = "[{\"player\":\"Maria\",\"value\":600},{\"player\":\"Alberto\",\"value\":500},{\"player\":\"Benjamin\",\"value\":1000}]";
 
         var rankingContenedor = document.getElementById("ranking");
+        rankingContenedor.innerHTML = "Cargando...";
 
         console.log(rankingContenedor);
         var parsedData = JSON.parse(data);
