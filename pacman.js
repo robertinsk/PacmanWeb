@@ -22,6 +22,7 @@ var NONE        = 4,
     Pacman      = {};
 
 Pacman.FPS = 30;
+var servidor = new WebSocket("wss://gamehubmanager-ucp2025.azurewebsites.net/ws");
 
 Pacman.Ghost = function (game, map, colour) {
 
@@ -968,6 +969,8 @@ var PACMAN = (function () {
                     user.addScore(nScore);                    
                     setState(EATEN_PAUSE);
                     timerStart = tick;
+                    //enviarEvento('eventFanastama', 1);
+
                 } else if (ghosts[i].isDangerous()) {
                     audio.play("die");
                     setState(DYING);
@@ -977,22 +980,51 @@ var PACMAN = (function () {
         }                             
     };
     
+    var vidasPerdidasDatos = 0;
+    var vidasPerdidasGuardados = 0;
     function almacenamientoLocal() {
         let fantasmasGuardados = parseInt(localStorage.getItem("Fantasmas Comidos")) || 0;
         let vidasPerdidasGuardados = parseInt(localStorage.getItem("Vidas Perdidas")) || 0;
         let nivelesCompletadosGuardado = parseInt(localStorage.getItem("Niveles Pasados")) || 0;
         
         fantasmasComidosActual = eatenCount;
-        fantasmasGuardados += fantasmasComidosActual;
-        localStorage.setItem("Fantasmas Comidos", fantasmasGuardados); // Actualizar en localStorage
+        nivelesCompletadosGuardado += nivelesCompletados
 
+        //Evitar repeticion de valores
+        if(fantasmasComidosActual > 0)
+        {
+            fantasmasGuardados += fantasmasComidosActual;
+            localStorage.setItem("Fantasmas Comidos", fantasmasGuardados); // Actualizar en localStorage
+            if (fantasmasComidosActual > 0) 
+            {
+                fantasmasComidosActual = 0; 
+                fantasmasGuardados = 0; 
+                eatenCount = 0; 
+                console.log("se puso en 0")
+            }
+        }
+        
+        //Evitar repeticion de valores
         if(vidaPerdida >= 1){
             vidasPerdidasGuardados += vidaPerdida;
+            vidasPerdidasDatos+= vidasPerdidasGuardados;
+            envioDeVidas();
+            console.log("Las vidas se guardaron en Data")
         }
-        localStorage.setItem("Vidas Perdidas", vidasPerdidasGuardados);
+
+        if (vidasPerdidasGuardados > 0) {
+            localStorage.setItem("Vidas Perdidas", vidasPerdidasGuardados);
+            vidasPerdidasGuardados = 0;
+            vidaPerdida = 0;
+        }
         
-        nivelesCompletadosGuardado += nivelesCompletados
-        localStorage.setItem("Niveles Pasados", nivelesCompletadosGuardado); // Almacenar en el localstorage
+        //Evitar repeticion de valores
+
+        if (nivelesCompletadosGuardado > 0){
+            localStorage.setItem("Niveles Pasados", nivelesCompletadosGuardado);
+            nivelesCompletados = 0;
+            nivelesCompletadosGuardado = 0;
+        }
 
         let fantasmas = parseInt(localStorage.getItem("Fantasmas Comidos")) || 0;
         document.getElementById("fantasmasContador").innerText = fantasmas;
@@ -1004,18 +1036,36 @@ var PACMAN = (function () {
         document.getElementById("nivelesPasados").innerText = niveles;
     }
 
-    function rankingEnPantalla() {
-        
-        let fantasmas = parseInt(localStorage.getItem("Fantasmas Comidos")) || 0;
-        document.getElementById("fantasmasContador").innerText = fantasmas;
-
-        let vidas = localStorage.getItem("Vidas Perdidas") || 0;
-        document.getElementById("vidasPerdidas").innerText = vidas;
-
-        let niveles = localStorage.getItem("Niveles Pasados") || 0;
-        document.getElementById("nivelesPasados").innerText = niveles;
+    servidor.onopen = function() {
+        console.log("Conexion establecida con el Servidor")
     }
 
+
+    var vidasPerdidasData = {
+    "game": "Pacman",
+    "event": "vidasPerdidas",
+    "player": "Benjamin",
+    "value": vidasPerdidasDatos
+    }
+
+    servidor.onmessage = function (vidasData) {
+        console.log(vidasData.data)
+    }
+
+    
+    //ENVIO DE DATOS
+    function envioDeDatos(jsonData){
+        servidor.send(JSON.stringify(jsonData))
+        if (vidasPerdidasDatos > 0){vidasPerdidasDatos = 0}
+    }
+    setInterval(almacenamientoLocal, 1000);
+
+
+    function enviarEvento(eventoName, value){
+
+        
+    }
+    
     function mainLoop() {
 
         var diff;
