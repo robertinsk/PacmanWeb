@@ -58,7 +58,7 @@
   <div id="borde">
     <div id="ranking">
       <h2>Ranking</h2>
-      1: <span id="rank1">Player 1</span> <br>
+      1: <span id="rank1">Player 1</span> | Fantasmas comidos: <span id="fantasmasContador"></span> | Vidas Perdidas: <span id="vidasPerdidas"></span> | Niveles Terminados: <span id="nivelesPasados"></span><br>
       2: <span id="rank2">Player 2</span> <br>
       3: <span id="rank3">Player 3</span> <br>
       4: <span id="rank4">Player 4</span> <br>
@@ -70,12 +70,11 @@
     var data = "[{\"player\":\"Maria\",\"value\":600},{\"player\":\"Alberto\",\"value\":500},{\"player\":\"Benjamin\",\"value\":1000}]";
 
         var rankingContenedor = document.getElementById("ranking");
-        rankingContenedor.innerHTML = "Cargando...";
 
         console.log(rankingContenedor);
         var parsedData = JSON.parse(data);
         parsedData.sort(function(a, b) {
-            return b.value - a.value; 
+            return b.value - a.value;
         });
         
         for (var i = 0; i < parsedData.length; i++) {

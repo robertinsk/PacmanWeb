@@ -813,6 +813,14 @@ var PACMAN = (function () {
         ctx.fillText(text, x, (map.height * 10) + 8);
     }
 
+    function dialog2(text) {
+        ctx.fillStyle = "#FFFF00";
+        ctx.font      = "14px BDCartoonShoutRegular";
+        var width = ctx.measureText(text).width,
+            x     = ((map.width * map.blockSize) - width) / 2;        
+        ctx.fillText(text, x, (map.height * 3.5) + 8);
+    }
+
     function soundDisabled() {
         return localStorage["soundDisabled"] === "true";
     };
@@ -855,6 +863,7 @@ var PACMAN = (function () {
             audio.pause();
             map.draw(ctx);
             dialog("Paused");
+            dialog2("Press R to reset your ranking")
             console.log("El juego esta en pausa")
         } else if (state !== PAUSE) {   
             return user.keyDown(e);
@@ -984,6 +993,27 @@ var PACMAN = (function () {
         
         nivelesCompletadosGuardado += nivelesCompletados
         localStorage.setItem("Niveles Pasados", nivelesCompletadosGuardado); // Almacenar en el localstorage
+
+        let fantasmas = parseInt(localStorage.getItem("Fantasmas Comidos")) || 0;
+        document.getElementById("fantasmasContador").innerText = fantasmas;
+
+        let vidas = localStorage.getItem("Vidas Perdidas") || 0;
+        document.getElementById("vidasPerdidas").innerText = vidas;
+
+        let niveles = localStorage.getItem("Niveles Pasados") || 0;
+        document.getElementById("nivelesPasados").innerText = niveles;
+    }
+
+    function rankingEnPantalla() {
+        
+        let fantasmas = parseInt(localStorage.getItem("Fantasmas Comidos")) || 0;
+        document.getElementById("fantasmasContador").innerText = fantasmas;
+
+        let vidas = localStorage.getItem("Vidas Perdidas") || 0;
+        document.getElementById("vidasPerdidas").innerText = vidas;
+
+        let niveles = localStorage.getItem("Niveles Pasados") || 0;
+        document.getElementById("nivelesPasados").innerText = niveles;
     }
 
     function mainLoop() {
