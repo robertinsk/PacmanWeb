@@ -22,7 +22,8 @@ var NONE        = 4,
     Pacman      = {};
 
 Pacman.FPS = 30;
-var servidor = new WebSocket("wss://gamehubmanager-ucp2025.azurewebsites.net/ws");
+let servidor;
+
 
 Pacman.Ghost = function (game, map, colour) {
 
@@ -995,6 +996,7 @@ var PACMAN = (function () {
         {
             fantasmasGuardados += fantasmasComidosActual;
             localStorage.setItem("Fantasmas Comidos", fantasmasGuardados); // Actualizar en localStorage
+            enviarEvento("Fantasmas Comidos", fantasmasGuardados)
             if (fantasmasComidosActual > 0) 
             {
                 fantasmasComidosActual = 0; 
@@ -1008,8 +1010,8 @@ var PACMAN = (function () {
         if(vidaPerdida >= 1){
             vidasPerdidasGuardados += vidaPerdida;
             vidasPerdidasDatos+= vidasPerdidasGuardados;
-            envioDeVidas();
-            console.log("Las vidas se guardaron en Data")
+            console.log(vidasPerdidasGuardados)
+            enviarEvento("Vidas Perdidas", vidasPerdidasGuardados);
         }
 
         if (vidasPerdidasGuardados > 0) {
@@ -1025,45 +1027,58 @@ var PACMAN = (function () {
             nivelesCompletados = 0;
             nivelesCompletadosGuardado = 0;
         }
-
-        let fantasmas = parseInt(localStorage.getItem("Fantasmas Comidos")) || 0;
-        document.getElementById("fantasmasContador").innerText = fantasmas;
-
-        let vidas = localStorage.getItem("Vidas Perdidas") || 0;
-        document.getElementById("vidasPerdidas").innerText = vidas;
-
-        let niveles = localStorage.getItem("Niveles Pasados") || 0;
-        document.getElementById("nivelesPasados").innerText = niveles;
     }
 
+    //MANEJO DEL SERVIDOR
+    servidor = new WebSocket("wss://gamehubmanager-ucp2025.azurewebsites.net/ws");
+        
     servidor.onopen = function() {
-        console.log("Conexion establecida con el Servidor")
+        console.log("Conexion establecida con el Servidor");
     }
 
+    servidor.onerror = function() {
+        console.log("La conexion a fallado");
+    };
 
-    var vidasPerdidasData = {
-    "game": "Pacman",
-    "event": "vidasPerdidas",
-    "player": "Benjamin",
-    "value": vidasPerdidasDatos
-    }
-
-    servidor.onmessage = function (vidasData) {
-        console.log(vidasData.data)
-    }
-
+    servidor.onclose = function() {
+        console.warn("Reestableciendo la conexion con el servidor");
+    };
     
+
     //ENVIO DE DATOS
-    function envioDeDatos(jsonData){
-        servidor.send(JSON.stringify(jsonData))
-        if (vidasPerdidasDatos > 0){vidasPerdidasDatos = 0}
+    function envioDeDatos(puntajeData){
+        console.log("Enviando al servidor:", JSON.stringify(puntajeData));
+        if (servidor.readyState === WebSocket.OPEN){
+            servidor.send(JSON.stringify(puntajeData))
+            servidor.onmessage = function(msg) {
+                console.log("Mensaje Recibido ", msg.data)
+                actualizarPuntaje(msg.data)
+            }
+        }
+        else{
+            console.warn("Se ha perdido la conexion con el servidor")
+        }
     }
     setInterval(almacenamientoLocal, 1000);
+    setInterval(()=> {
+        if (servidor.readyState === WebSocket.CLOSING || servidor.readyState === WebSocket.CLOSED){
+            servidor = new WebSocket("wss://gamehubmanager-ucp2025.azurewebsites.net/ws");
+            console.log("Se reestablecio la conexion")
+        }
+    }, 1000)
 
 
     function enviarEvento(eventoName, value){
+        const puntajeData = {
+            game: "Pacman",
+            event: eventoName,
+            player: "Benjamin",
+            value: value
+        };
 
-        
+        console.log("EnviaFan.", puntajeData)
+
+        envioDeDatos(puntajeData);
     }
     
     function mainLoop() {
