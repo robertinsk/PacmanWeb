@@ -61,12 +61,10 @@ Pacman.Ghost = function (game, map, colour) {
     
     function isVunerable() { 
         return eatable !== null;
-        console.log("Pacman es Vulnerable");
     };
     
     function isDangerous() {
         return eaten === null;
-        console.log("Pacman Ya no es Vulnerable");
     };
 
     function isHidden() { 
@@ -297,6 +295,8 @@ Pacman.User = function (game, map) {
 
     function addScore(nScore) { 
         score += nScore;
+        PACMAN.enviarEvento("Puntaje Total", score)
+        console.log(score)
         if (score >= 10000 && score - nScore < 10000) { 
             lives += 1;
             console.log("Pacman tiene una vida mas"); 
@@ -306,6 +306,7 @@ Pacman.User = function (game, map) {
     function theScore() { 
         return score;
     };
+    
 
     function loseLife() { 
         lives -= 1;
@@ -996,7 +997,6 @@ var PACMAN = (function () {
         {
             fantasmasGuardados += fantasmasComidosActual;
             localStorage.setItem("Fantasmas Comidos", fantasmasGuardados); // Actualizar en localStorage
-            enviarEvento("Fantasmas Comidos", fantasmasGuardados)
             if (fantasmasComidosActual > 0) 
             {
                 fantasmasComidosActual = 0; 
@@ -1011,7 +1011,6 @@ var PACMAN = (function () {
             vidasPerdidasGuardados += vidaPerdida;
             vidasPerdidasDatos+= vidasPerdidasGuardados;
             console.log(vidasPerdidasGuardados)
-            enviarEvento("Vidas Perdidas", vidasPerdidasGuardados);
         }
 
         if (vidasPerdidasGuardados > 0) {
@@ -1046,17 +1045,48 @@ var PACMAN = (function () {
     
 
     //ENVIO DE DATOS
-    function envioDeDatos(puntajeData){
+    function envioDeDatos(puntajeData) {
         console.log("Enviando al servidor:", JSON.stringify(puntajeData));
-        if (servidor.readyState === WebSocket.OPEN){
-            servidor.send(JSON.stringify(puntajeData))
+        if (servidor.readyState === WebSocket.OPEN) {
+            servidor.send(JSON.stringify(puntajeData));
             servidor.onmessage = function(msg) {
-                console.log("Mensaje Recibido ", msg.data)
-                actualizarPuntaje(msg.data)
-            }
-        }
-        else{
-            console.warn("Se ha perdido la conexion con el servidor")
+                console.log("Mensaje Recibido ", msg.data);
+                try {
+                    // Parseamos los datos recibidos
+                    const datosRecibidos = JSON.parse(msg.data);
+                    console.log("Datos parseados:", datosRecibidos);
+                    
+                    // Extraer los datos de jugadores de la estructura recibida
+                    let jugadores = [];
+                    if (Array.isArray(datosRecibidos)) {
+                        // Recorremos el array principal
+                        datosRecibidos.forEach(item => {
+                            if (item.players && Array.isArray(item.players)) {
+                                // Por cada jugador en players, creamos un objeto para el ranking
+                                item.players.forEach(player => {
+                                    jugadores.push({
+                                        player: player.eventName, // El nombre está en eventName
+                                        value: player.value,      // El valor sí está en value
+                                        game: item.game          // El juego está en el objeto principal
+                                    });
+                                });
+                            }
+                        });
+                    }
+                    
+                    // Actualizamos el ranking con los jugadores extraídos
+                    if (jugadores.length > 0) {
+                        actualizarRanking(jugadores);
+                    } else {
+                        console.warn("No se encontraron datos de jugadores en la respuesta");
+                    }
+                    
+                } catch (error) {
+                    console.error("Error al procesar datos recibidos:", error);
+                }
+            };
+        } else {
+            console.warn("Se ha perdido la conexion con el servidor");
         }
     }
     setInterval(almacenamientoLocal, 1000);
@@ -1080,6 +1110,106 @@ var PACMAN = (function () {
 
         envioDeDatos(puntajeData);
     }
+
+    //a partir de aca voy a crear el ranking:
+    let rankingGlobal = [];
+    function actualizarRanking(datosNuevos) {
+        if (!datosNuevos) {
+            console.warn("No se recibieron datos para actualizar el ranking");
+            return;
+        }
+        
+        // Si datosNuevos es un único objeto de puntaje
+        if (!Array.isArray(datosNuevos)) {
+            // Lo convertimos en array si es un solo objeto
+            rankingGlobal.push(datosNuevos);
+        } else {
+            // Si ya es un array, lo concatenamos
+            rankingGlobal = rankingGlobal.concat(datosNuevos);
+        }
+        
+        // Ordenamos el ranking de mayor a menor por valor
+        ordenarRanking();
+        
+        // Mostramos el ranking actualizado en consola
+        mostrarRanking();
+        
+        // Actualizamos la visualización HTML
+        actualizarRankingEnHTML();
+    }
+    
+    function ordenarRanking() {
+        // Primero eliminamos duplicados manteniendo el puntaje más alto por jugador
+        const jugadoresUnicos = {};
+        
+        for (const item of rankingGlobal) {
+            // Nos aseguramos que tenga la propiedad player
+            const jugador = item.player || "Desconocido";
+            
+            // Si el jugador no existe en nuestro objeto o tiene una puntuación mayor, lo actualizamos
+            if (!jugadoresUnicos[jugador] || Number(item.value) > Number(jugadoresUnicos[jugador].value)) {
+                jugadoresUnicos[jugador] = item;
+            }
+        }
+        
+        // Convertimos el objeto de jugadores únicos de vuelta a un array
+        rankingGlobal = Object.values(jugadoresUnicos);
+        
+        // Ahora ordenamos el array por la propiedad value de mayor a menor
+        rankingGlobal.sort((a, b) => {
+            // Convertimos a número para asegurar una comparación correcta
+            const valorA = a.value !== undefined ? Number(a.value) : 0;
+            const valorB = b.value !== undefined ? Number(b.value) : 0;
+            
+            return valorB - valorA; // Orden descendente
+        });
+    }
+    
+    function mostrarRanking() {
+        console.log("=== RANKING ACTUALIZADO ===");
+        // Mostramos los top 10 o menos si no hay suficientes
+        const topN = Math.min(10, rankingGlobal.length);
+        
+        for (let i = 0; i < topN; i++) {
+            const jugador = rankingGlobal[i];
+            console.log(`${i+1}. ${jugador.value} puntos (${jugador.game})`);
+        }
+        console.log("=========================");
+        
+        return rankingGlobal; // Retornamos el ranking para uso externo
+    }
+    
+    // Función para obtener el ranking actual
+    function obtenerRanking() {
+        return rankingGlobal;
+    }
+    
+    // Función para mostrar el ranking en un elemento HTML (opcional)
+    function actualizarRankingEnHTML() {
+        // Actualizar cada span en la lista de ranking
+        for (let i = 1; i <= 5; i++) {
+            const elementoRank = document.getElementById(`rank${i}`);
+            
+            if (elementoRank) {
+                if (i <= rankingGlobal.length) {
+                    const jugador = rankingGlobal[i-1];
+                    // Mostramos nombre del jugador y su puntaje
+                    elementoRank.textContent = `${jugador.player}.  ${jugador.value}`;
+                    const puntuacion = jugador.value !== undefined ? jugador.value : 
+                                  (jugador.score !== undefined ? jugador.score : 
+                                  (jugador.points !== undefined ? jugador.points : "N/A"));
+                
+                    const nombreJugador = jugador.player || jugador.name || jugador.usuario || "Jugador";
+                    console.log(`Jugador ${i}:`, jugador);
+                } else {
+                    // Si no hay suficientes jugadores, mostramos un texto por defecto
+                    elementoRank.textContent = "Sin datos";
+                }
+            }
+        }
+    }
+
+    //aca termina el ranking
     
     function mainLoop() {
 
@@ -1221,7 +1351,8 @@ var PACMAN = (function () {
     };
     
     return {
-        "init" : init
+        "init" : init,
+        enviarEvento: enviarEvento
     };
     
 }());
