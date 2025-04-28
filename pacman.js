@@ -24,7 +24,6 @@ var NONE        = 4,
 Pacman.FPS = 30;
 let servidor;
 
-
 Pacman.Ghost = function (game, map, colour) {
 
     var position  = null,
