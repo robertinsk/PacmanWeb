@@ -38,6 +38,33 @@
         border-color: blue;
         border-radius: 10px;
       }
+      #nombre {
+        word-wrap: break-word;
+        font-family: BDCartoonShoutRegular;
+        font-size: 10px;
+        text-align: center;
+        background-color: black;
+        color: yellow;
+        padding: 10px;
+        border-style: solid;
+        border-width: 5px;
+        border-color: blue;
+        border-radius: 10px;
+      }
+      #nombreInput {
+        word-wrap: break-word;
+        font-family: BDCartoonShoutRegular;
+        font-size: 10px;
+        text-align: center;
+        background-color: black;
+        color: yellow;
+        padding: 10px;
+        border-style: solid;
+        border-width: 5px;
+        border-color: blue;
+        border-radius: 10px;
+      }
+      
       #borde {
         background-color: black;
         border-style: solid;
@@ -64,6 +91,11 @@
       4: <span id="rank4">Cargando...</span> <br>
       5: <span id="rank5">Cargando...</span> <br>
     </div>    
+    <div id="nombreForm">
+      <h2>Ingresa tu nombre para jugar</h2>
+      <input type="text" id="playerName" placeholder="Tu nombre">
+      <button id="startButton">¡Jugar!</button>
+  </div>
   </div>
   
 
@@ -75,9 +107,11 @@
           .catch(err => console.error('Error registrando el Service Worker', err));
   }  
   </script>
-  <script src="pacman.js"></script>
   <script src="modernizr-1.5.min.js"></script>
   <script src="sw.js"></script>
+  <script src="IngresarNombre.js"></script>
+  <script src="pacman.js" id="pacmanScript" defer></script>
+
 
 
 

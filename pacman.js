@@ -294,7 +294,8 @@ Pacman.User = function (game, map) {
 
     function addScore(nScore) { 
         score += nScore;
-        PACMAN.enviarEvento("Puntaje Total", score)
+        puntaje = 10;
+        PACMAN.enviarEvento("Puntaje Total", puntaje)
         console.log(score)
         if (score >= 10000 && score - nScore < 10000) { 
             lives += 1;
@@ -441,6 +442,8 @@ Pacman.User = function (game, map) {
             
             map.setBlock(nextWhole, Pacman.EMPTY);           
             addScore((block === Pacman.BISCUIT) ? 10 : 50);
+            puntajePastillaG = 50;
+            PACMAN.enviarEvento("Puntaje Total", puntajePastillaG)
             eaten += 1;
             
             if (eaten === 182) {
@@ -966,6 +969,8 @@ var PACMAN = (function () {
                     ghosts[i].eat();
                     eatenCount += 1;
                     nScore = eatenCount * 50;
+                    puntajeFantasmas = 50;
+                    PACMAN.enviarEvento("Puntaje Total", puntajeFantasmas)
                     drawScore(nScore, ghostPos[i]);
                     user.addScore(nScore);                    
                     setState(EATEN_PAUSE);
@@ -1042,7 +1047,7 @@ var PACMAN = (function () {
         console.warn("Reestableciendo la conexion con el servidor");
     };
     
-
+    
     //ENVIO DE DATOS
     function envioDeDatos(puntajeData) {
         console.log("Enviando al servidor:", JSON.stringify(puntajeData));
