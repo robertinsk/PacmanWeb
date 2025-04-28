@@ -1167,8 +1167,8 @@ var PACMAN = (function () {
     
     function mostrarRanking() {
         console.log("=== RANKING ACTUALIZADO ===");
-        // Mostramos los top 10 o menos si no hay suficientes
-        const topN = Math.min(10, rankingGlobal.length);
+        // Mostramos los top 5 o menos si no 
+        const topN = Math.min(5, rankingGlobal.length);
         
         for (let i = 0; i < topN; i++) {
             const jugador = rankingGlobal[i];
