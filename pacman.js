@@ -1,6 +1,6 @@
 /*
  *jslint browser: true, undef: true, eqeqeq: true, nomen: true, white: true
- *global window: false, document: false, fantasmasComidosActual: 0,
+ *global window: false, document: false, fantasmasComidosActual: 0, var timer;
 /*
 
 /*
