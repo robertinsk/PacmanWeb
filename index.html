@@ -78,13 +78,16 @@
       5: <span id="rank5">Cargando...</span> <br>
     </div>    
     <div id="nombre">
-      <h3>Ingresar Tu Nombre</h3> <span id="escribiendo"></span>
-      <button id="submit"></button>
+      <h3>Ingresar Tu Nombre</h3>
+      <input type="text" id="playerNameInput" placeholder="Tu nombre aquí">
+      <button id="submitName">Guardar</button>
+      <span id="playerNameDisplay"></span>
     </div>
   </div>
   
 
   <div id="pacman"></div>
+  
   <script>
     if ('serviceWorker' in navigator){
       navigator.serviceWorker.register('/sw.js')
@@ -92,6 +95,7 @@
           .catch(err => console.error('Error registrando el Service Worker', err));
   }  
   </script>
+
   <script src="pacman.js"></script>
   <script src="modernizr-1.5.min.js"></script>
   <script src="sw.js"></script>

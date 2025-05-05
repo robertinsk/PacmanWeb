@@ -442,8 +442,7 @@ Pacman.User = function (game, map) {
             
             map.setBlock(nextWhole, Pacman.EMPTY);           
             addScore((block === Pacman.BISCUIT) ? 10 : 50);
-            puntajePastillaG = 50;
-            PACMAN.enviarEvento("Puntaje Total", puntajePastillaG)
+            puntajePastillaG = 40;
             eaten += 1;
             
             if (eaten === 182) {
@@ -452,6 +451,7 @@ Pacman.User = function (game, map) {
             
             if (block === Pacman.PILL) { 
                 game.eatenPill();
+                PACMAN.enviarEvento("Puntaje Total", puntajePastillaG)
             }
         }   
                 
@@ -975,7 +975,6 @@ var PACMAN = (function () {
                     user.addScore(nScore);                    
                     setState(EATEN_PAUSE);
                     timerStart = tick;
-                    //enviarEvento('eventFanastama', 1);
 
                 } else if (ghosts[i].isDangerous()) {
                     audio.play("die");
@@ -987,7 +986,6 @@ var PACMAN = (function () {
     };
     
     var vidasPerdidasDatos = 0;
-    var vidasPerdidasGuardados = 0;
     function almacenamientoLocal() {
         let fantasmasGuardados = parseInt(localStorage.getItem("Fantasmas Comidos")) || 0;
         let vidasPerdidasGuardados = parseInt(localStorage.getItem("Vidas Perdidas")) || 0;
@@ -1032,6 +1030,43 @@ var PACMAN = (function () {
         }
     }
 
+    // Variable global para el nombre del jugador
+    let playername = "";
+    // Función que se ejecuta al cargar la página
+    document.addEventListener("DOMContentLoaded", function() {
+        // Verificar si ya existe un nombre guardado
+        const savedName = localStorage.getItem("pacmanPlayerName");
+        
+        if (savedName) {
+            // Si ya hay un nombre guardado, usarlo y ocultar el formulario
+            playername = savedName;
+            document.getElementById("playerNameDisplay").textContent = "Jugador: " + playername;
+            document.getElementById("playerNameInput").style.display = "none";
+            document.getElementById("submitName").style.display = "none";
+            document.querySelector("#nombre h3").textContent = "Jugador";
+        }
+        
+        // Configurar el botón para guardar el nombre
+        document.getElementById("submitName").addEventListener("click", ingresarNombre);
+    });
+    // Función para guardar el nombre del jugador
+    function ingresarNombre() {
+        const inputElement = document.getElementById("playerNameInput");
+        playername = inputElement.value.trim();
+        
+        if (playername) {
+            // Guardar en localStorage
+            localStorage.setItem("pacmanPlayerName", playername);
+            
+            // Mostrar el nombre y ocultar el formulario
+            document.getElementById("playerNameDisplay").textContent = "Jugador: " + playername;
+            inputElement.style.display = "none";
+            document.getElementById("submitName").style.display = "none";
+            document.querySelector("#nombre h3").textContent = "Jugador";
+        } else {
+            alert("Por favor ingresa un nombre válido");
+        }
+    }
     //MANEJO DEL SERVIDOR
     servidor = new WebSocket("wss://gamehubmanager-ucp2025.azurewebsites.net/ws");
         
@@ -1106,7 +1141,7 @@ var PACMAN = (function () {
         const puntajeData = {
             game: "Pacman",
             event: eventoName,
-            player: "Benjamin",
+            player: playername,
             value: value
         };
 
