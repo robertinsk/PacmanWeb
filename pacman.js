@@ -1377,7 +1377,7 @@ var PACMAN = (function () {
             audio.load(x[0], x[1], function() { load(arr, callback); });
         }
     };
-        
+    var timer; 
     function loaded() {
 
         dialog("Press N to Start");
@@ -1385,7 +1385,6 @@ var PACMAN = (function () {
         document.addEventListener("keydown", keyDown, true);
         document.addEventListener("keypress", keyPress, true); 
         
-        var timer;
         timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
     };
     
