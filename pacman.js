@@ -62,21 +62,21 @@ Pacman.Ghost = function (game, map, colour) {
     
     function isVunerable() { 
         return eatable !== null;
-    };
+    }
     
     function isDangerous() {
         return eaten === null;
-    };
+    }
 
     function isHidden() { 
         return eatable === null && eaten !== null;
-    };
+    }
     
     function getRandomDirection() {
         var moves = (direction === LEFT || direction === RIGHT) 
             ? [UP, DOWN] : [LEFT, RIGHT];
         return moves[Math.floor(Math.random() * 2)];
-    };
+    }
     
     function reset() {
         eaten = null;
@@ -84,31 +84,31 @@ Pacman.Ghost = function (game, map, colour) {
         position = {"x": 90, "y": 80};
         direction = getRandomDirection();
         due = getRandomDirection();
-    };
+    }
     
     function onWholeSquare(x) {
         return x % 10 === 0;
-    };
+    }
     
     function oppositeDirection(dir) { 
         return dir === LEFT && RIGHT ||
             dir === RIGHT && LEFT ||
             dir === UP && DOWN || UP;
-    };
+    }
 
     function makeEatable() {
         direction = oppositeDirection(direction);
         eatable = game.getTick();
-    };
+    }
 
     function eat() { 
         eatable = null;
         eaten = game.getTick();
-    };
+    }
 
     function pointToCoord(x) {
         return Math.round(x / 10);
-    };
+    }
 
     function nextSquare(x, dir) {
         var rem = x % 10;
@@ -119,7 +119,7 @@ Pacman.Ghost = function (game, map, colour) {
         } else {
             return x - rem;
         }
-    };
+    }
 
     function onGridSquare(pos) {
         return onWholeSquare(pos.y) && onWholeSquare(pos.x);
@@ -1353,6 +1353,7 @@ var PACMAN = (function () {
         map.draw(ctx);
         dialog("Loading ...");
 
+        var Modernizr;
         var extension = Modernizr.audio.ogg ? 'ogg' : 'mp3';
 
         var audio_files = [
@@ -1384,7 +1385,7 @@ var PACMAN = (function () {
         document.addEventListener("keydown", keyDown, true);
         document.addEventListener("keypress", keyPress, true); 
         
-        timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
+        var timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
     };
     
     return {
