@@ -842,9 +842,7 @@ var PACMAN = (function () {
         timerStart = tick;
         setState(COUNTDOWN);
     }    
-    
-    var fantasmasGuardados = 0;
-    var vidasPerdidasGuardados = 0;
+
     function startNewGame() {
         setState(WAITING);
         level = 1;
@@ -853,8 +851,6 @@ var PACMAN = (function () {
         map.draw(ctx);
         startLevel();
         almacenamientoLocal();
-        fantasmasGuardados;
-        vidasPerdidasGuardados;
     }
 
     function keyDown(e) {
@@ -946,7 +942,7 @@ var PACMAN = (function () {
 
     function mainDraw() { 
 
-        var diff, u, i, len, nScore;
+        var u, i, len, nScore;
         
         ghostPos = [];
 
@@ -1225,9 +1221,6 @@ var PACMAN = (function () {
     }
     
     // Función para obtener el ranking actual
-    function obtenerRanking() {
-        return rankingGlobal;
-    }
     
     // Función para mostrar el ranking en un elemento HTML (opcional)
     function actualizarRankingEnHTML() {
@@ -1240,11 +1233,7 @@ var PACMAN = (function () {
                     const jugador = rankingGlobal[i-1];
                     // Mostramos nombre del jugador y su puntaje
                     elementoRank.textContent = `${jugador.player}.  ${jugador.value}`;
-                    const puntuacion = jugador.value !== undefined ? jugador.value : 
-                                  (jugador.score !== undefined ? jugador.score : 
-                                  (jugador.points !== undefined ? jugador.points : "N/A"));
                 
-                    const nombreJugador = jugador.player || jugador.name || jugador.usuario || "Jugador";
                     console.log(`Jugador ${i}:`, jugador);
                 } else {
                     // Si no hay suficientes jugadores, mostramos un texto por defecto
