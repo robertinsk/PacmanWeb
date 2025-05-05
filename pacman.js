@@ -842,7 +842,8 @@ var PACMAN = (function () {
         timerStart = tick;
         setState(COUNTDOWN);
     }    
-
+    var vidasPerdidasGuardados = 0;
+    var fantasmasGuardados = 0;
     function startNewGame() {
         setState(WAITING);
         level = 1;
