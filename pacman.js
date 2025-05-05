@@ -966,6 +966,7 @@ var PACMAN = (function () {
         
         userPos = u["new"];
         
+        var puntajeFantasmas = 0;
         for (i = 0, len = ghosts.length; i < len; i += 1) {
             if (collided(userPos, ghostPos[i]["new"])) {
                 if (ghosts[i].isVunerable()) { 
