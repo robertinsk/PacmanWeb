@@ -110,7 +110,7 @@ Pacman.Ghost = function (game, map, colour) {
         return Math.round(x / 10);
     }
 
-    function nextSquare(x, dir) {
+    function nextSquareGhost(x, dir) {
         var rem = x % 10;
         if (rem === 0) { 
             return x; 
@@ -231,8 +231,8 @@ Pacman.Ghost = function (game, map, colour) {
             
             if (onGrid &&
                 map.isFloorSpace({
-                    "y":pointToCoord(nextSquare(npos.y, due)),
-                    "x":pointToCoord(nextSquare(npos.x, due))})) {
+                    "y":pointToCoord(nextSquareGhost(npos.y, due)),
+                    "x":pointToCoord(nextSquareGhost(npos.x, due))})) {
                 direction = due;
             } else {
                 npos = null;
@@ -245,8 +245,8 @@ Pacman.Ghost = function (game, map, colour) {
         
         if (onGrid &&
             map.isWallSpace({
-                "y" : pointToCoord(nextSquare(npos.y, direction)),
-                "x" : pointToCoord(nextSquare(npos.x, direction))
+                "y" : pointToCoord(nextSquareGhost(npos.y, direction)),
+                "x" : pointToCoord(nextSquareGhost(npos.x, direction))
             })) {
             
             due = getRandomDirection();            
