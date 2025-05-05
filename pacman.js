@@ -1,5 +1,7 @@
-/*jslint browser: true, undef: true, eqeqeq: true, nomen: true, white: true */
-/*global window: false, document: false */
+/*
+ *jslint browser: true, undef: true, eqeqeq: true, nomen: true, white: true
+ *global window: false, document: false, fantasmasComidosActual: 0,
+/*
 
 /*
  * fix looped audio
@@ -42,7 +44,7 @@ Pacman.Ghost = function (game, map, colour) {
             "x": addBounded(current.x, xSpeed),
             "y": addBounded(current.y, ySpeed)
         };
-    };
+    }
 
     /* Collision detection(walls) is done when a ghost lands on an
      * exact block, make sure they dont skip over it 
@@ -998,6 +1000,7 @@ var PACMAN = (function () {
         //Evitar repeticion de valores
         if(fantasmasComidosActual > 0)
         {
+            
             fantasmasGuardados += fantasmasComidosActual;
             localStorage.setItem("Fantasmas Comidos", fantasmasGuardados); // Actualizar en localStorage
             if (fantasmasComidosActual > 0) 
