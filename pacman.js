@@ -798,8 +798,6 @@ var PACMAN = (function () {
         ghostPos, userPos, 
         stateChanged = true,
         timerStart   = null,
-        /* global timer */
-        timer        = null,
         lastTime     = 0,
         ctx          = null,
         map          = null,
@@ -1380,6 +1378,7 @@ var PACMAN = (function () {
         }
     };
 
+    let timer;
     function loaded() {
 
         dialog("Press N to Start");
@@ -1387,7 +1386,6 @@ var PACMAN = (function () {
         document.addEventListener("keydown", keyDown, true);
         document.addEventListener("keypress", keyPress, true); 
         
-        /* global timer */
         timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
     };
     
