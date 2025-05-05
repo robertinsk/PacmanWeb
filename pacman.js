@@ -987,7 +987,6 @@ var PACMAN = (function () {
         }                             
     };
     
-    var vidasPerdidasDatos = 0;
     function almacenamientoLocal() {
         let fantasmasGuardados = parseInt(localStorage.getItem("Fantasmas Comidos")) || 0;
         let vidasPerdidasGuardados = parseInt(localStorage.getItem("Vidas Perdidas")) || 0;
