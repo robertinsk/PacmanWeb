@@ -291,6 +291,8 @@ Pacman.User = function (game, map) {
     keyMap[KEY.ARROW_UP]    = UP;
     keyMap[KEY.ARROW_RIGHT] = RIGHT;
     keyMap[KEY.ARROW_DOWN]  = DOWN;
+    
+    var puntaje = 0;
 
     function addScore(nScore) { 
         score += nScore;
@@ -437,6 +439,7 @@ Pacman.User = function (game, map) {
         
         block = map.block(nextWhole);        
         
+        var puntajePastillaG = 0;
         if ((isMidSquare(position.y) || isMidSquare(position.x)) &&
             block === Pacman.BISCUIT || block === Pacman.PILL) {
             
