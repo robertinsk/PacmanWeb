@@ -994,7 +994,7 @@ var PACMAN = (function () {
         let vidasPerdidasGuardados = parseInt(localStorage.getItem("Vidas Perdidas")) || 0;
         let nivelesCompletadosGuardado = parseInt(localStorage.getItem("Niveles Pasados")) || 0;
         
-        fantasmasComidosActual = eatenCount;
+        var fantasmasComidosActual = eatenCount;
         nivelesCompletadosGuardado += nivelesCompletados
 
         //Evitar repeticion de valores
