@@ -1272,8 +1272,8 @@ var PACMAN = (function () {
                 loseLife();
             } else { 
                 redrawBlock(userPos);
-                var i;
-                for (i = 0, len = ghosts.length; i < len; i += 1) {
+                
+                for (var i = 0, len = ghosts.length; i < len; i += 1) {
                     redrawBlock(ghostPos[i].old);
                     ghostPos.push(ghosts[i].draw(ctx));
                 }                                   
