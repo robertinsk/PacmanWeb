@@ -397,7 +397,7 @@ Pacman.User = function (game, map) {
              (dir === UP || dir === DOWN));
     };
 
-    function move(ctx) {
+    function move() {
         
         var npos        = null, 
             nextWhole   = null, 
