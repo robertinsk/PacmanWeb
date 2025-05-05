@@ -58,7 +58,7 @@ Pacman.Ghost = function (game, map, colour) {
             return x1 - rem;
         }
         return x1 + x2;
-    };
+    }
     
     function isVunerable() { 
         return eatable !== null;
@@ -620,6 +620,8 @@ Pacman.Map = function (size) {
             pillSize = 0;
         }
         
+        var i;
+        var j;
         for (i = 0; i < height; i += 1) {
 		    for (j = 0; j < width; j += 1) {
                 if (map[i][j] === Pacman.PILL) {
@@ -798,7 +800,6 @@ var PACMAN = (function () {
         timerStart   = null,
         lastTime     = 0,
         ctx          = null,
-        timer        = null,
         map          = null,
         user         = null,
         stored       = null;
