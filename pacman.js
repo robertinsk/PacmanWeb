@@ -1386,6 +1386,7 @@ var PACMAN = (function () {
         document.addEventListener("keydown", keyDown, true);
         document.addEventListener("keypress", keyPress, true); 
         
+        timer;
         timer = window.setInterval(mainLoop, 1000 / Pacman.FPS);
     };
     
