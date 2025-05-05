@@ -1,6 +1,6 @@
 /*
  *jslint browser: true, undef: true, eqeqeq: true, nomen: true, white: true
- *global window: false, document: false, fantasmasComidosActual: 0, var timer;
+ *global window: false, document: false,
 /*
 
 /*
@@ -1353,7 +1353,7 @@ var PACMAN = (function () {
         map.draw(ctx);
         dialog("Loading ...");
 
-        var Modernizr;
+
         var extension = Modernizr.audio.ogg ? 'ogg' : 'mp3';
 
         var audio_files = [
