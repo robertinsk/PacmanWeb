@@ -798,7 +798,6 @@ var PACMAN = (function () {
         ghostPos, userPos, 
         stateChanged = true,
         timerStart   = null,
-        Modernizr    = null,
         lastTime     = 0,
         ctx          = null,
         map          = null,
