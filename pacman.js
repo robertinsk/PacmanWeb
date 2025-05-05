@@ -123,11 +123,11 @@ Pacman.Ghost = function (game, map, colour) {
 
     function onGridSquare(pos) {
         return onWholeSquare(pos.y) && onWholeSquare(pos.x);
-    };
+    }
 
     function secondsAgo(tick) { 
         return (game.getTick() - tick) / Pacman.FPS;
-    };
+    }
 
     function getColour() { 
         if (eatable) { 
@@ -140,7 +140,7 @@ Pacman.Ghost = function (game, map, colour) {
             return "#222";
         } 
         return colour;
-    };
+    }
 
     function draw(ctx) {
   
@@ -204,7 +204,7 @@ Pacman.Ghost = function (game, map, colour) {
         ctx.closePath();
         ctx.fill();
 
-    };
+    }
 
     function pane(pos) {
 
@@ -217,8 +217,8 @@ Pacman.Ghost = function (game, map, colour) {
         }
 
         return false;
-    };
-    
+    }
+
     function move(ctx) {
         
         var oldPos = position,
@@ -266,7 +266,7 @@ Pacman.Ghost = function (game, map, colour) {
             "new" : position,
             "old" : oldPos
         };
-    };
+    }
     
     return {
         "eat"         : eat,
