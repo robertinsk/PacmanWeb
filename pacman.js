@@ -853,8 +853,8 @@ var PACMAN = (function () {
         map.draw(ctx);
         startLevel();
         almacenamientoLocal();
-        fantasmasGuardados = 0;
-        vidasPerdidasGuardados = 0;
+        fantasmasGuardados;
+        vidasPerdidasGuardados;
     }
 
     function keyDown(e) {
