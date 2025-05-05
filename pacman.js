@@ -1377,7 +1377,7 @@ var PACMAN = (function () {
             audio.load(x[0], x[1], function() { load(arr, callback); });
         }
     };
-    var timer; 
+
     function loaded() {
 
         dialog("Press N to Start");
