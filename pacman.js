@@ -1016,6 +1016,7 @@ var PACMAN = (function () {
         //Evitar repeticion de valores
         if(vidaPerdida >= 1){
             vidasPerdidasGuardados += vidaPerdida;
+            var vidasPerdidasDatos;
             vidasPerdidasDatos+= vidasPerdidasGuardados;
             console.log(vidasPerdidasGuardados)
         }
