@@ -1,10 +1,12 @@
-const CACHE_NAME = 'pacman-cache-v1';
+const CACHE_NAME = 'pacman-cache-3.5.0';
 const urlsToCache = [
     '/',
     '/index.html',
     '/pacman.js',
     '/modernizr-1.5.min.js',
     '/manifest.json',
+    '/audio/eating.short.MP3',
+    '/audio/eating.short.ogg'
     // Asegúrate de agregar aquí todos los recursos importantes
     // como imágenes, sonidos, CSS, etc. que tu juego necesita
 ];
