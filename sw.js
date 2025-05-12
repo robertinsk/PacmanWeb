@@ -113,10 +113,3 @@ self.addEventListener('fetch', (event) => {
     })());
   }
 });
-
-// Manejo de mensajes para forzar skipWaiting
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
-});
