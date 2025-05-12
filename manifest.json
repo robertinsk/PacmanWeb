@@ -9,8 +9,8 @@
   "lang": "es",
   "dir": "auto",
   "display_override": [
-    "browser",
     "fullscreen",
+    "browser",
     "window-controls-overlay"
   ],
   "categories": [
