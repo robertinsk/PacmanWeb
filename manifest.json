@@ -6,10 +6,15 @@
   "background_color": "#ffffff",
   "theme_color": "#2196f3",
   "orientation": "fullscreen",
+  "lang": "es",
+  "dir": "auto",
   "display_override": [
     "browser",
     "fullscreen",
     "window-controls-overlay"
+  ],
+  "categories": [
+    "games"
   ],
   "icons": [
     {
