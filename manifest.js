@@ -1,11 +1,11 @@
 {
-  "name"; "Mi Aplicación Web",
-  "short_name"; "MiApp",
+  "name"; "PacmanOnline",
+  "short_name"; "PacmanOn",
   "start_url"; "/",
   "display"; "standalone",
   "background_color"; "#ffffff",
   "theme_color"; "#2196f3",
-  "orientation"; "portrait",
+  "orientation"; "fullscreen",
   "icons"; [
     {
       "src": "PacmanImagen192x192.png",
