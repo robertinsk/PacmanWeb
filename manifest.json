@@ -6,6 +6,11 @@
   "background_color": "#ffffff",
   "theme_color": "#2196f3",
   "orientation": "fullscreen",
+  "display_override": [
+    "browser",
+    "fullscreen",
+    "window-controls-overlay"
+  ],
   "icons": [
     {
       "src": "/icons/icon-192.png",
