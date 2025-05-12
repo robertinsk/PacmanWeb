@@ -1246,6 +1246,58 @@ var PACMAN = (function () {
     }
 
     //aca termina el ranking
+
+    //RANKING OFFLINE
+    // Función para actualizar los elementos del ranking según el estado de conexión
+    function actualizarEstadoRanking() {
+        const estaConectado = navigator.onLine;
+        const rankingItems = document.querySelectorAll('#ranking span[id^="rank"]');
+        
+        if (!estaConectado) {
+            // Si está offline, cambiamos todos los elementos a "Offline"
+            rankingItems.forEach(item => {
+            item.textContent = "Offline";
+            });
+        } else {
+            // Si está online y aún muestra "Offline", volvemos a "Cargando..."
+            rankingItems.forEach(item => {
+            if (item.textContent === "Offline") {
+                item.textContent = "Cargando...";
+                // Aquí podrías llamar a tu función que carga los datos reales del ranking
+                // cargarDatosRanking();
+            }
+            });
+        }
+    }
+
+    // Función para inicializar los eventos de detección de conectividad
+    function inicializarDeteccionConectividad() {
+        // Verificar el estado inicial
+        actualizarEstadoRanking();
+        
+        // Configurar detectores de eventos para cambios en la conectividad
+        window.addEventListener('online', () => {
+            console.log('El navegador está ahora conectado');
+            actualizarEstadoRanking();
+        });
+        
+        window.addEventListener('offline', () => {
+            console.log('El navegador está ahora desconectado');
+            actualizarEstadoRanking();
+        });
+    }
+
+    // Llamar a la función cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', inicializarDeteccionConectividad);
+
+    // Si tienes un Service Worker, puedes usarlo para mensajería adicional
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', event => {
+            if (event.data && event.data.type === 'OFFLINE_STATUS_CHANGE') {
+            actualizarEstadoRanking();
+            }
+        });
+    }
     var i;
     function mainLoop() {
 
