@@ -1,7 +1,7 @@
 {
   "name": "PacmanOnline",
   "short_name": "PacmanOn",
-  "start_url": "https://pacman-web-eosin.vercel.app/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2196f3",
