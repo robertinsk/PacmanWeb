@@ -8,12 +8,12 @@
   "orientation": "fullscreen",
   "icons": [
     {
-      "src": "PacmanImagen192x192.png",
+      "src": "/icons/PacmanImagen192x192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "PacmanImagen512x512.png",
+      "src": "/icons/PacmanImagen512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
