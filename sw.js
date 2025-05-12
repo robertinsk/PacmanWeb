@@ -4,6 +4,7 @@ const urlsToCache = [
     '/index.html',
     '/pacman.js',
     '/modernizr-1.5.min.js',
+    '/manifest.json',
     // Asegúrate de agregar aquí todos los recursos importantes
     // como imágenes, sonidos, CSS, etc. que tu juego necesita
 ];
