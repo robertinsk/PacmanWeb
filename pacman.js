@@ -1530,7 +1530,7 @@ window.addEventListener("DOMContentLoaded", function () {
     boton2.addEventListener("click", function () {
         PACMAN.pausa();
         console.log("Pausa")
-        if (pausa === true){
+        if (pausa == true){
             PACMAN.reanudar();
             console.log("REANUDO");
             pausa = false;
