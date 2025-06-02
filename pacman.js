@@ -1408,6 +1408,29 @@ var PACMAN = (function () {
 
 //.........................................ACA INICIA EL GIROSCOPIO...................................................................................
 
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', function(event) {
+        console.log('Alpha:', event.alpha);
+        console.log('Beta:', event.beta);
+        console.log('Gamma:', event.gamma);
+      });
+    } else {
+      console.log('La API de eventos de orientación no es compatible.');
+    }
+
+        if (window.Gyroscope) {
+      const gyroscope = new Gyroscope({
+        referenceFrame: 'device' // Opcional: Define el sistema de referencia
+      });
+
+      gyroscope.addEventListener('reading', (event) => {
+        console.log('X:', event.target.reading.x);
+        console.log('Y:', event.target.reading.y);
+        console.log('Z:', event.target.reading.z);
+      });
+    } else {
+      console.log('La API de sensores genéricos no es compatible.');
+    }
 
 // AGREGADO DE BOTON
 
