@@ -1476,7 +1476,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     // Acción al hacer clic
     boton.addEventListener("click", function () {
-        startNewGame();
+        PACMAN.startNewGame();
         boton.remove(); // Opcional: eliminar el botón luego de iniciar
     });
 });
