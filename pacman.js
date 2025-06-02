@@ -1428,7 +1428,6 @@ var PACMAN = (function () {
                         });
                     },
         "pausa": function (){
-            if (e.keyCode === KEY.P) {
                 stored = state;
                 setState(PAUSE);
                 audio.pause();
@@ -1436,7 +1435,7 @@ var PACMAN = (function () {
                 dialog("Paused");
                 dialog2("Press R to reset your ranking")
                 console.log("El juego esta en pausa")
-            }},
+            },
         enviarEvento: enviarEvento
     };
     
