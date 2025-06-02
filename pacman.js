@@ -545,7 +545,6 @@ Pacman.User = function (game, map) {
         "newLevel"      : newLevel,
         "reset"         : reset,
         "resetPosition" : resetPosition,
-        "user" : user
     };
 };
 
