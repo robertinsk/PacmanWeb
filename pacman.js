@@ -1537,7 +1537,7 @@ window.addEventListener("DOMContentLoaded", function () {
             console.log("Pausa");
         } else {
             PACMAN.reanudar();
-            console.log("Reanudados");
+            console.log("Reanudado");
         }
     });
 });
