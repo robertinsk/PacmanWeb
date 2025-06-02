@@ -1493,7 +1493,6 @@ window.addEventListener("DOMContentLoaded", function () {
     boton.innerText = "Iniciar nuevo juego (te amo meme)";
     boton.style.fontSize = "20px";
     boton.style.padding = "10px 20px";
-    boton.style.marginTop = "20px";
     boton.style.display = "block";
     boton.style.margin = "0 auto";
     document.body.appendChild(boton);
@@ -1503,7 +1502,6 @@ window.addEventListener("DOMContentLoaded", function () {
     boton.innerText = "Pausa";
     boton.style.fontSize = "20px";
     boton.style.padding = "10px 20px";
-    boton.style.marginTop = "20px";
     boton.style.display = "block";
     boton.style.margin = "0 auto";
     document.body.appendChild(boton2);
