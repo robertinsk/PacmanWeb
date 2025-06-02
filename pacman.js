@@ -1476,7 +1476,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     // Acción al hacer clic
     boton.addEventListener("click", function () {
-        PACMAN.init(state == PLAYING, "./");
+        PACMAN.setState(PLAYING)(wrapper, "./");
         boton.remove(); // Opcional: eliminar el botón luego de iniciar
     });
 });
