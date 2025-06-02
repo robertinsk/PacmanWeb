@@ -1439,6 +1439,10 @@ var PACMAN = (function () {
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', function(event) {
         console.log('Alpha:', event.alpha);
+        if (event.beta < 80){
+            console.log("Mover hacia la derecha");
+            PACMAN.moveDown();
+        }
         if (event.gamma > 20){
             console.log("Mover hacia la derecha");
             PACMAN.moveRight();
@@ -1450,10 +1454,6 @@ var PACMAN = (function () {
         if (event.beta > 100){
             console.log("Mover hacia la derecha");
             PACMAN.moveUp();
-        }
-        if (event.beta < 80){
-            console.log("Mover hacia la derecha");
-            PACMAN.moveDown();
         }
         
         console.log('Beta:', event.beta);
