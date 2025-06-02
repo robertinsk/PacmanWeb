@@ -1532,13 +1532,12 @@ window.addEventListener("DOMContentLoaded", function () {
     boton2.addEventListener("click", function () {
         const estadoActual = PACMAN.getState();
 
-        if(estadoActual !== PACMAN.PAUSE){
-            PACMAN.reanudar();
-            console.log("REANUDO");
-        }
-        else {
+        if (estadoActual !== PACMAN.PAUSE) {
             PACMAN.pausa();
-            console.log("Pausa")
+            console.log("Pausa");
+        } else {
+            PACMAN.reanudar();
+            console.log("Reanudado");
         }
     });
 });
