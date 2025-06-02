@@ -1437,7 +1437,9 @@ var PACMAN = (function () {
                 console.log("El juego esta en pausa")
             },
         "reanudar": function (){
-            user.keyDown(e);
+            audio.resume();
+            map.draw(ctx);
+            setState(stored);
         },
         enviarEvento: enviarEvento
     };
@@ -1530,7 +1532,7 @@ window.addEventListener("DOMContentLoaded", function () {
         console.log("Pausa")
         pausa = true
         if (pausa === true){
-            return user.keyDown(e);
+            PACMAN.reanudar();
             console.log("REANUDO")
         }
     });
