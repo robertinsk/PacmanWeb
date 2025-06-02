@@ -1496,15 +1496,18 @@ window.addEventListener("DOMContentLoaded", function () {
     boton.style.marginTop = "20px";
     boton.style.display = "block";
     boton.style.margin = "0 auto";
+    document.body.appendChild(boton);
 
     // Crear botón
-    const boton2 = document.createElement("button2");
+    const boton2 = document.createElement("button");
     boton.innerText = "Pausa";
     boton.style.fontSize = "20px";
     boton.style.padding = "10px 20px";
     boton.style.marginTop = "20px";
     boton.style.display = "block";
     boton.style.margin = "0 auto";
+    document.body.appendChild(boton2);
+
 
     // Agregar botón al body
     document.body.appendChild(boton);
