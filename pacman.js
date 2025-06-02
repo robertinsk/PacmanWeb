@@ -1497,12 +1497,27 @@ window.addEventListener("DOMContentLoaded", function () {
     boton.style.display = "block";
     boton.style.margin = "0 auto";
 
+    // Crear botón
+    const boton2 = document.createElement("button2");
+    boton.innerText = "Pausa";
+    boton.style.fontSize = "20px";
+    boton.style.padding = "10px 20px";
+    boton.style.marginTop = "20px";
+    boton.style.display = "block";
+    boton.style.margin = "0 auto";
+
     // Agregar botón al body
     document.body.appendChild(boton);
+    document.body.appendChild(boton2);
 
     // Acción al hacer clic
     boton.addEventListener("click", function () {
         PACMAN.startNewGame();
+    });
+
+    // Acción al hacer clic
+    boton.addEventListener("click", function () {
+        setState(PAUSE);
     });
 });
 
