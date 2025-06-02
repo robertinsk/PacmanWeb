@@ -1408,281 +1408,111 @@ var PACMAN = (function () {
 
 //.........................................ACA INICIA EL GIROSCOPIO...................................................................................
 
-// Función para detectar soporte del giroscopio
-// Función para deshabilitar el giroscopio
-function disableGyroscope() {
-    gyroscopeEnabled = false;
-    window.removeEventListener('deviceorientation', handleOrientation, true);
-    console.log("Giroscopio deshabilitado");
-}
-
-// Función para manejar la orientación del dispositivo
-function handleOrientation(event) {
-    if (!gyroscopeEnabled || state === PAUSE) return;
-    
-    var beta = event.beta;   // Inclinación adelante/atrás (-180 a 180)
-    var gamma = event.gamma; // Inclinación izquierda/derecha (-90 a 90)
-    
-    // Filtrar valores nulos
-    if (beta === null || gamma === null) return;
-    
-    // Determinar dirección basada en la inclinación
-    var newDirection = null;
-    
-    // Priorizar el movimiento más pronunciado
-    if (Math.abs(gamma) > Math.abs(beta)) {
-        // Movimiento horizontal (izquierda/derecha)
-        if (gamma > orientationThreshold) {
-            newDirection = RIGHT;
-        } else if (gamma < -orientationThreshold) {
-            newDirection = LEFT;
-        }
-    } else {
-        // Movimiento vertical (arriba/abajo)
-        if (beta > orientationThreshold) {
-            newDirection = DOWN;
-        } else if (beta < -orientationThreshold) {
-            newDirection = UP;
-        }
+// Clase Giroscopio para manejar la orientación del dispositivo
+class Giroscopio {
+    constructor() {
+        this.isActive = false;
+        this.alpha = 0;  // Rotación Z (brújula)
+        this.beta = 0;   // Rotación X (inclinación adelante/atrás)
+        this.gamma = 0;  // Rotación Y (inclinación izquierda/derecha)
+        this.threshold = 10; // Umbral para detectar movimiento significativo
     }
     
-    // Aplicar la nueva dirección si es válida
-    if (newDirection !== null && state === PLAYING) {
-        // Simular evento de teclado para mantener compatibilidad
-        var simulatedEvent = {
-            keyCode: getKeyCodeFromDirection(newDirection),
-            preventDefault: function() {},
-            stopPropagation: function() {}
-        };
-        user.keyDown(simulatedEvent);
-    }
-    
-    // Guardar orientación actual
-    lastOrientation = { beta: beta, gamma: gamma };
-}
-
-// Función auxiliar para convertir dirección a keyCode
-function getKeyCodeFromDirection(direction) {
-    switch(direction) {
-        case LEFT: return KEY.ARROW_LEFT;
-        case RIGHT: return KEY.ARROW_RIGHT;
-        case UP: return KEY.ARROW_UP;
-        case DOWN: return KEY.ARROW_DOWN;
-        default: return null;
-    }
-}
-
-// Modificar la función keyDown existente para incluir controles del giroscopio
-function keyDown(e) {
-    if (e.keyCode === KEY.N) {
-        startNewGame();
-    } else if (e.keyCode === KEY.S) {
-        audio.disableSound();
-        localStorage["soundDisabled"] = !soundDisabled();
-    } else if (e.keyCode === KEY.G) { // Nueva tecla G para alternar giroscopio
-        if (gyroscopeSupported) {
-            if (gyroscopeEnabled) {
-                disableGyroscope();
-            } else {
-                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-                    requestGyroscopePermission();
-                } else {
-                    enableGyroscope();
+    // Inicializar el giroscopio
+    async iniciar() {
+        try {
+            // Verificar si el dispositivo soporta DeviceOrientationEvent
+            if (!window.DeviceOrientationEvent) {
+                throw new Error('Tu dispositivo no soporta giroscopio');
+            }
+            
+            // Para iOS 13+ necesitamos pedir permisos
+            if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                const permission = await DeviceOrientationEvent.requestPermission();
+                if (permission !== 'granted') {
+                    throw new Error('Permisos de giroscopio denegados');
                 }
             }
-        } else {
-            console.log("Giroscopio no disponible en este dispositivo");
-        }
-    } else if (e.keyCode === KEY.P && state === PAUSE) {
-        audio.resume();
-        map.draw(ctx);
-        setState(stored);
-    } else if (e.keyCode === KEY.P) {
-        stored = state;
-        setState(PAUSE);
-        audio.pause();
-        map.draw(ctx);
-        dialog("Paused");
-        console.log("El juego esta en pausa")
-    } else if (state !== PAUSE) {   
-        return user.keyDown(e);
-    } else if (e.keyCode === KEY.R) {
-        var reseteo = 0;
-        localStorage.setItem("Fantasmas Comidos", reseteo)
-        localStorage.setItem("Vidas Perdidas", reseteo)
-        localStorage.setItem("Niveles Pasados", reseteo)
-    }
-    return true;
-}
-
-// Modificar la función drawFooter para mostrar el estado del giroscopio
-function drawFooter() {
-    var topLeft  = (map.height * map.blockSize),
-        textBase = topLeft + 17;
-    
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(0, topLeft, (map.width * map.blockSize), 30);
-    
-    ctx.fillStyle = "#FFFF00";
-
-    for (var i = 0, len = user.getLives(); i < len; i++) {
-        ctx.fillStyle = "#FFFF00";
-        ctx.beginPath();
-        ctx.moveTo(150 + (25 * i) + map.blockSize / 2,
-                   (topLeft+1) + map.blockSize / 2);
-        
-        ctx.arc(150 + (25 * i) + map.blockSize / 2,
-                (topLeft+1) + map.blockSize / 2,
-                map.blockSize / 2, Math.PI * 0.25, Math.PI * 1.75, false);
-        ctx.fill();
-    }
-
-    // Indicador de sonido
-    ctx.fillStyle = !soundDisabled() ? "#00FF00" : "#FF0000";
-    ctx.font = "bold 16px sans-serif";
-    ctx.fillText("S", 10, textBase);
-
-    // Indicador de giroscopio
-    if (gyroscopeSupported) {
-        ctx.fillStyle = gyroscopeEnabled ? "#00FF00" : "#FF0000";
-        ctx.font = "bold 16px sans-serif";
-        ctx.fillText("G", 30, textBase);
-    }
-
-    ctx.fillStyle = "#FFFF00";
-    ctx.font      = "14px BDCartoonShoutRegular";
-    ctx.fillText("Score: " + user.theScore(), 50, textBase);
-    ctx.fillText("Level: " + level, 260, textBase);
-}
-
-// Modificar la función dialog para incluir instrucciones del giroscopio
-function dialog(text) {
-    ctx.fillStyle = "#FFFF00";
-    ctx.font      = "14px BDCartoonShoutRegular";
-    var width = ctx.measureText(text).width,
-        x     = ((map.width * map.blockSize) - width) / 2;        
-    ctx.fillText(text, x, (map.height * 10) + 8);
-    
-    // Mostrar controles adicionales
-    if (text === "Press N to Start" || text.includes("Press N to start")) {
-        ctx.font = "10px BDCartoonShoutRegular";
-        var controlsText = "Controls: Arrows or Tilt Device (G to toggle gyroscope)";
-        var controlsWidth = ctx.measureText(controlsText).width;
-        var controlsX = ((map.width * map.blockSize) - controlsWidth) / 2;
-        ctx.fillText(controlsText, controlsX, (map.height * 10) + 25);
-    }
-}
-
-// Inicializar detección de giroscopio cuando se inicializa el juego
-function init(wrapper, root) {
-    var i, len, ghost,
-        blockSize = wrapper.offsetWidth / 19,
-        canvas    = document.createElement("canvas");
-    
-    canvas.setAttribute("width", (blockSize * 19) + "px");
-    canvas.setAttribute("height", (blockSize * 22) + 30 + "px");
-
-    wrapper.appendChild(canvas);
-
-    ctx  = canvas.getContext('2d');
-
-    // Detectar soporte de giroscopio
-    detectGyroscopeSupport();
-
-    audio = new Pacman.Audio({"soundDisabled":soundDisabled});
-    map   = new Pacman.Map(blockSize);
-    user  = new Pacman.User({ 
-        "completedLevel" : completedLevel, 
-        "eatenPill"      : eatenPill 
-    }, map);
-
-    for (i = 0, len = ghostSpecs.length; i < len; i += 1) {
-        ghost = new Pacman.Ghost({"getTick":getTick}, map, ghostSpecs[i]);
-        ghosts.push(ghost);
-    }
-    
-    map.draw(ctx);
-    dialog("Loading ...");
-
-    var extension = Modernizr.audio.ogg ? 'ogg' : 'mp3';
-
-    var audio_files = [
-        ["start", root + "audio/opening_song." + extension],
-        ["die", root + "audio/die." + extension],
-        ["eatghost", root + "audio/eatghost." + extension],
-        ["eatpill", root + "audio/eatpill." + extension],
-        ["eating", root + "audio/eating.short." + extension],
-        ["eating2", root + "audio/eating.short." + extension]
-    ];
-
-    load(audio_files, function() { loaded(); });
-}
-
-// Función para calibrar el giroscopio (opcional)
-function calibrateGyroscope() {
-    if (!gyroscopeEnabled) return;
-    
-    // Guardar la orientación actual como referencia
-    var calibrationTime = 1000; // 1 segundo para calibrar
-    var calibrationSamples = [];
-    
-    var calibrationInterval = setInterval(function() {
-        if (lastOrientation.beta !== 0 || lastOrientation.gamma !== 0) {
-            calibrationSamples.push({
-                beta: lastOrientation.beta,
-                gamma: lastOrientation.gamma
-            });
-        }
-    }, 100);
-    
-    setTimeout(function() {
-        clearInterval(calibrationInterval);
-        if (calibrationSamples.length > 0) {
-            // Calcular posición neutral promedio
-            var avgBeta = calibrationSamples.reduce((sum, sample) => sum + sample.beta, 0) / calibrationSamples.length;
-            var avgGamma = calibrationSamples.reduce((sum, sample) => sum + sample.gamma, 0) / calibrationSamples.length;
             
-            console.log("Giroscopio calibrado - Beta:", avgBeta, "Gamma:", avgGamma);
-            // Aquí podrías ajustar los valores de referencia si es necesario
-        }
-    }, calibrationTime);
-}
-
-// Agregar evento para manejar la visibilidad de la página
-document.addEventListener('visibilitychange', function() {
-    if (document.hidden && gyroscopeEnabled) {
-        // Pausar el giroscopio cuando la página no está visible
-        disableGyroscope();
-    } else if (!document.hidden && gyroscopeSupported) {
-        // Reactivar el giroscopio cuando la página vuelve a estar visible
-        // (solo si estaba habilitado antes)
-        if (localStorage.getItem('gyroscopeWasEnabled') === 'true') {
-            enableGyroscope();
+            // Agregar el event listener
+            window.addEventListener('deviceorientation', this.manejarOrientacion.bind(this));
+            this.isActive = true;
+            
+            console.log('🎯 Giroscopio iniciado correctamente');
+            console.log('📱 Mueve tu dispositivo para ver los cambios');
+            console.log('-------------------------------------------');
+            
+        } catch (error) {
+            console.error('❌ Error al iniciar giroscopio:', error.message);
         }
     }
-});
-
-// Guardar estado del giroscopio
-function saveGyroscopeState() {
-    localStorage.setItem('gyroscopeWasEnabled', gyroscopeEnabled.toString());
-}
-
-// Llamar a esta función cuando se habilite/deshabilite el giroscopio
-function enableGyroscope() {
-    if (!gyroscopeSupported) return;
     
-    gyroscopeEnabled = true;
-    window.addEventListener('deviceorientation', handleOrientation, true);
-    saveGyroscopeState();
-    console.log("Giroscopio habilitado");
-}
-
-function disableGyroscope() {
-    gyroscopeEnabled = false;
-    window.removeEventListener('deviceorientation', handleOrientation, true);
-    saveGyroscopeState();
-    console.log("Giroscopio deshabilitado");
-}
+    // Manejar los datos de orientación
+    manejarOrientacion(event) {
+        this.alpha = Math.round(event.alpha || 0);
+        this.beta = Math.round(event.beta || 0);
+        this.gamma = Math.round(event.gamma || 0);
+        
+        this.detectarMovimiento();
+        this.mostrarDatos();
+    }
+    
+    // Detectar hacia dónde se mueve el dispositivo
+    detectarMovimiento() {
+        let direccion = [];
+        
+        // Detección basada en beta (inclinación adelante/atrás)
+        if (this.beta > this.threshold) {
+            direccion.push('📱 INCLINADO HACIA ADELANTE');
+        } else if (this.beta < -this.threshold) {
+            direccion.push('📱 INCLINADO HACIA ATRÁS');
+        }
+        
+        // Detección basada en gamma (inclinación izquierda/derecha)
+        if (this.gamma > this.threshold) {
+            direccion.push('📱 INCLINADO HACIA LA DERECHA');
+        } else if (this.gamma < -this.threshold) {
+            direccion.push('📱 INCLINADO HACIA LA IZQUIERDA');
+        }
+        
+        // Detección de rotación basada en alpha
+        if (this.alpha !== null) {
+            if (this.alpha >= 315 || this.alpha < 45) {
+                direccion.push('🧭 APUNTANDO AL NORTE');
+            } else if (this.alpha >= 45 && this.alpha < 135) {
+                direccion.push('🧭 APUNTANDO AL ESTE');
+            } else if (this.alpha >= 135 && this.alpha < 225) {
+                direccion.push('🧭 APUNTANDO AL SUR');
+            } else if (this.alpha >= 225 && this.alpha < 315) {
+                direccion.push('🧭 APUNTANDO AL OESTE');
+            }
+        }
+        
+        if (direccion.length === 0) {
+            direccion.push('📱 DISPOSITIVO EN POSICIÓN NEUTRAL');
+        }
+        
+        this.direccionActual = direccion;
+    }
+    
+    // Mostrar datos en consola
+    mostrarDatos() {
+        console.clear();
+        console.log('🎯 GIROSCOPIO ACTIVO');
+        console.log('===================');
+        console.log(`🔄 Alpha (Z): ${this.alpha}° (Brújula)`);
+        console.log(`📐 Beta (X):  ${this.beta}° (Adelante/Atrás)`);
+        console.log(`📐 Gamma (Y): ${this.gamma}° (Izquierda/Derecha)`);
+        console.log('');
+        console.log('📍 DIRECCIÓN DETECTADA:');
+        this.direccionActual.forEach(dir => console.log(`   ${dir}`));
+        console.log('');
+        console.log('💡 Explicación de valores:');
+        console.log('   • Beta > 0: Inclinado hacia adelante');
+        console.log('   • Beta < 0: Inclinado hacia atrás');
+        console.log('   • Gamma > 0: Inclinado hacia la derecha');
+        console.log('   • Gamma < 0: Inclinado hacia la izquierda');
+    }
 
 // AGREGADO DE BOTON
 
