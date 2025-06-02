@@ -1528,14 +1528,16 @@ window.addEventListener("DOMContentLoaded", function () {
     pausa = false
     // Acción al hacer clic
     boton2.addEventListener("click", function () {
-        PACMAN.pausa();
-        console.log("Pausa")
-        if (pausa == true){
+        if(pausa == false){
+            PACMAN.pausa();
+            console.log("Pausa")
+            pausa = true
+        }
+        else if (pausa == true){
             PACMAN.reanudar();
             console.log("REANUDO");
             pausa = false;
         }
-        pausa = true
     });
 });
 
