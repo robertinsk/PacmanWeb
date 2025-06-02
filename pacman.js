@@ -1412,7 +1412,7 @@ var PACMAN = (function () {
       window.addEventListener('deviceorientation', function(event) {
         console.log('Alpha:', event.alpha);
         if (event.alpha > 100){
-            PACMAN.user.keyDown({ keyCode: KEY.ARROW_RIGHT, preventDefault: () => {}, stopPropagation: () => {} });
+            keyDown({ keyCode: KEY.ARROW_RIGHT, preventDefault: () => {}, stopPropagation: () => {} });
         }
         console.log('Beta:', event.beta);
         console.log('Gamma:', event.gamma);
