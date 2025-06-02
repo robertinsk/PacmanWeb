@@ -1490,7 +1490,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     // Crear botón
     const boton = document.createElement("button");
-    boton.innerText = "Iniciar juego";
+    boton.innerText = "Iniciar nuevo juego";
     boton.style.fontSize = "20px";
     boton.style.padding = "10px 20px";
     boton.style.marginTop = "20px";
@@ -1503,7 +1503,6 @@ window.addEventListener("DOMContentLoaded", function () {
     // Acción al hacer clic
     boton.addEventListener("click", function () {
         PACMAN.startNewGame();
-        boton.remove(); // Opcional: eliminar el botón luego de iniciar
     });
 });
 
