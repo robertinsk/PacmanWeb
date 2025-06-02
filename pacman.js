@@ -1513,7 +1513,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     // Acción al hacer clic
     boton2.addEventListener("click", function () {
-        PACMAN.setState(PAUSE);
+        PACMAN.PAUSE;
     });
 });
 
