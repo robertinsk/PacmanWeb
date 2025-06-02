@@ -1452,11 +1452,10 @@ var PACMAN = (function () {
         } else {
             if (beta > 60){
                 PACMAN.moveDown();
-            } else if (beta < 30) {
+            } else if (beta < 40) {
                 PACMAN.moveUp();
             }
         }
-        
         console.log('Beta:', event.beta);
         console.log('Gamma:', event.gamma);
       });
