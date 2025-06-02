@@ -1513,7 +1513,7 @@ class Giroscopio {
         console.log('   • Gamma > 0: Inclinado hacia la derecha');
         console.log('   • Gamma < 0: Inclinado hacia la izquierda');
     }
-
+}
 // AGREGADO DE BOTON
 
 window.addEventListener("DOMContentLoaded", function () {
