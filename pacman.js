@@ -1427,6 +1427,16 @@ var PACMAN = (function () {
                             stopPropagation: () => {}
                         });
                     },
+        "pausa": function (){
+            if (e.keyCode === KEY.P) {
+                stored = state;
+                setState(PAUSE);
+                audio.pause();
+                map.draw(ctx);
+                dialog("Paused");
+                dialog2("Press R to reset your ranking")
+                console.log("El juego esta en pausa")
+            }},
         enviarEvento: enviarEvento
     };
     
@@ -1513,7 +1523,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     // Acción al hacer clic
     boton2.addEventListener("click", function () {
-        Pausa();
+        PACMAN.pausa();
         console.log("Pausa")
     });
 });
