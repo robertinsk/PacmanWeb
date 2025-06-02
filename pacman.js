@@ -26,6 +26,11 @@ var NONE        = 4,
 Pacman.FPS = 30;
 let servidor;
 
+var gyroscopeEnabled = false;
+var gyroscopeSupported = false;
+var lastOrientation = { beta: 0, gamma: 0 };
+var orientationThreshold = 15;
+
 Pacman.Ghost = function (game, map, colour) {
 
     var position  = null,
@@ -1399,58 +1404,87 @@ var PACMAN = (function () {
     
 }());
 
+
+
 //.........................................ACA INICIA EL GIROSCOPIO...................................................................................
 
-if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-    // iOS 13+ requiere permiso
-    DeviceOrientationEvent.requestPermission()
-        .then(permissionState => {
-            if (permissionState === 'granted') {
-                window.addEventListener('deviceorientation', handleOrientation, true);
-            }
-        })
-        .catch(console.error);
-} else {
-    // Android y otros navegadores
+// Función para detectar soporte del giroscopio
+function detectGyroscopeSupport() {
+    if (window.DeviceOrientationEvent) {
+        gyroscopeSupported = true;
+        console.log("Giroscopio soportado");
+        return true;
+    } else {
+        console.log("Giroscopio no soportado en este dispositivo");
+        return false;
+    }
+}
+
+// Función para habilitar el giroscopio
+function enableGyroscope() {
+    if (!gyroscopeSupported) return;
+    
+    gyroscopeEnabled = true;
     window.addEventListener('deviceorientation', handleOrientation, true);
+    console.log("Giroscopio habilitado");
 }
 
+// Función para manejar la orientación del dispositivo
 function handleOrientation(event) {
-    const gamma = event.gamma; // izquierda (-90) a derecha (+90)
-    const beta = event.beta;   // adelante (0) a atrás (180)
-
-    // Por ejemplo:
-    if (gamma > 15) {
-        // Mover a la derecha
-    } else if (gamma < -15) {
-        // Mover a la izquierda
-    }
-
-    if (beta > 45) {
-        // Mover hacia abajo
-    } else if (beta < 15) {
-        // Mover hacia arriba
-    }
-}
-
-function handleOrientation(event) {
-    const gamma = event.gamma;
-    const beta = event.beta;
-
+    if (!gyroscopeEnabled || state === PAUSE) return;
+    
+    var beta = event.beta;   // Inclinación adelante/atrás (-180 a 180)
+    var gamma = event.gamma; // Inclinación izquierda/derecha (-90 a 90)
+    
+    // Filtrar valores nulos
+    if (beta === null || gamma === null) return;
+    
+    // Determinar dirección basada en la inclinación
+    var newDirection = null;
+    
+    // Priorizar el movimiento más pronunciado
     if (Math.abs(gamma) > Math.abs(beta)) {
-        if (gamma > 15) {
-            user.keyDown({ keyCode: KEY.ARROW_RIGHT, preventDefault: () => {}, stopPropagation: () => {} });
-        } else if (gamma < -15) {
-            user.keyDown({ keyCode: KEY.ARROW_LEFT, preventDefault: () => {}, stopPropagation: () => {} });
+        // Movimiento horizontal (izquierda/derecha)
+        if (gamma > orientationThreshold) {
+            newDirection = RIGHT;
+        } else if (gamma < -orientationThreshold) {
+            newDirection = LEFT;
         }
     } else {
-        if (beta > 45) {
-            user.keyDown({ keyCode: KEY.ARROW_DOWN, preventDefault: () => {}, stopPropagation: () => {} });
-        } else if (beta < 15) {
-            user.keyDown({ keyCode: KEY.ARROW_UP, preventDefault: () => {}, stopPropagation: () => {} });
+        // Movimiento vertical (arriba/abajo)
+        if (beta > orientationThreshold) {
+            newDirection = DOWN;
+        } else if (beta < -orientationThreshold) {
+            newDirection = UP;
         }
     }
+    
+    // Aplicar la nueva dirección si es válida
+    if (newDirection !== null && state === PLAYING) {
+        // Simular evento de teclado para mantener compatibilidad
+        var simulatedEvent = {
+            keyCode: getKeyCodeFromDirection(newDirection),
+            preventDefault: function() {},
+            stopPropagation: function() {}
+        };
+        user.keyDown(simulatedEvent);
+    }
+    
+    // Guardar orientación actual
+    lastOrientation = { beta: beta, gamma: gamma };
 }
+
+// Función auxiliar para convertir dirección a keyCode
+function getKeyCodeFromDirection(direction) {
+    switch(direction) {
+        case LEFT: return KEY.ARROW_LEFT;
+        case RIGHT: return KEY.ARROW_RIGHT;
+        case UP: return KEY.ARROW_UP;
+        case DOWN: return KEY.ARROW_DOWN;
+        default: return null;
+    }
+}
+
 
 // AGREGADO DE BOTON
 
