@@ -1439,21 +1439,21 @@ var PACMAN = (function () {
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', function(event) {
         console.log('Alpha:', event.alpha);
-        if (event.alpha > 80){
+        if (event.gamma > 20){
             console.log("Mover hacia la derecha");
             PACMAN.moveRight();
         }
-        if (event.alpha > -80){
+        if (event.gamma > -20){
             console.log("Mover hacia la izq");
             PACMAN.moveLeft();
         }
-        if (event.beta > 40){
+        if (event.beta > 100){
             console.log("Mover hacia la derecha");
             PACMAN.moveUp();
         }
-        if (event.beta > -40){
+        if (event.beta < 80){
             console.log("Mover hacia la derecha");
-            PACMAN.moveRight();
+            PACMAN.moveDown();
         }
         
         console.log('Beta:', event.beta);
