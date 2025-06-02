@@ -1406,6 +1406,27 @@ var PACMAN = (function () {
                             stopPropagation: () => {}
                         });
                     },
+        "moveLeft": function () {
+                        user.keyDown({
+                            keyCode: KEY.ARROW_LEFT,
+                            preventDefault: () => {},
+                            stopPropagation: () => {}
+                        });
+                    },
+        "moveUp": function () {
+                        user.keyDown({
+                            keyCode: KEY.ARROW_UP,
+                            preventDefault: () => {},
+                            stopPropagation: () => {}
+                        });
+                    },
+        "moveDown": function () {
+                        user.keyDown({
+                            keyCode: KEY.ARROW_DOWN,
+                            preventDefault: () => {},
+                            stopPropagation: () => {}
+                        });
+                    },
         enviarEvento: enviarEvento
     };
     
@@ -1418,10 +1439,23 @@ var PACMAN = (function () {
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', function(event) {
         console.log('Alpha:', event.alpha);
-        if (event.alpha > 100){
+        if (event.alpha > 80){
             console.log("Mover hacia la derecha");
             PACMAN.moveRight();
         }
+        if (event.alpha > -80){
+            console.log("Mover hacia la izq");
+            PACMAN.moveLeft();
+        }
+        if (event.beta > 40){
+            console.log("Mover hacia la derecha");
+            PACMAN.moveUp();
+        }
+        if (event.beta > -40){
+            console.log("Mover hacia la derecha");
+            PACMAN.moveRight();
+        }
+        
         console.log('Beta:', event.beta);
         console.log('Gamma:', event.gamma);
       });
