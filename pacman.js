@@ -1493,6 +1493,8 @@ var PACMAN = (function () {
 
 // AGREGADO DE BOTON
 
+pausa = true
+
 window.addEventListener("DOMContentLoaded", function () {
     // Crear contenedor si no existe
     let wrapper = document.getElementById("pacman");
@@ -1525,7 +1527,6 @@ window.addEventListener("DOMContentLoaded", function () {
         PACMAN.startNewGame();
     });
 
-    pausa = false
     // Acción al hacer clic
     boton2.addEventListener("click", function () {
         if(pausa == false){
