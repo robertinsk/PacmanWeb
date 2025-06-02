@@ -1441,6 +1441,10 @@ var PACMAN = (function () {
             map.draw(ctx);
             setState(stored);
         },
+        "getState": function () { return state; },
+        "PAUSE": PAUSE,
+        "PLAYING": PLAYING,
+        "WAITING": WAITING,
         enviarEvento: enviarEvento
     };
     
@@ -1529,15 +1533,15 @@ window.addEventListener("DOMContentLoaded", function () {
 
     // Acción al hacer clic
     boton2.addEventListener("click", function () {
-        if(pausa == false){
+        const estadoActual = PACMAN.getState();
+
+        if(estadoActual !== PACMAN.PAUSE){
             PACMAN.pausa();
             console.log("Pausa")
-            pausa = true
         }
-        else if (pausa == true){
+        else{
             PACMAN.reanudar();
             console.log("REANUDO");
-            pausa = false;
         }
     });
 });
