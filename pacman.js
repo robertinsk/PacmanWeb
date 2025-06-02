@@ -1514,6 +1514,7 @@ window.addEventListener("DOMContentLoaded", function () {
     // Acción al hacer clic
     boton2.addEventListener("click", function () {
         PACMAN.PAUSE;
+        console.log("Pausa")
     });
 });
 
