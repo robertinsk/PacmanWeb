@@ -1436,6 +1436,9 @@ var PACMAN = (function () {
                 dialog2("Press R to reset your ranking")
                 console.log("El juego esta en pausa")
             },
+        "reanudar": function (){
+            user.keyDown(e);
+        },
         enviarEvento: enviarEvento
     };
     
@@ -1524,6 +1527,9 @@ window.addEventListener("DOMContentLoaded", function () {
     boton2.addEventListener("click", function () {
         PACMAN.pausa();
         console.log("Pausa")
+        if (state !== PAUSE){
+            return user.keyDown(e);
+        }
     });
 });
 
