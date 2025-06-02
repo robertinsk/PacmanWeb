@@ -1427,23 +1427,6 @@ var PACMAN = (function () {
                             stopPropagation: () => {}
                         });
                     },
-        "pausa": function (){
-                stored = state;
-                setState(PAUSE);
-                audio.pause();
-                map.draw(ctx);
-                dialog("Paused");
-                dialog2("Press R to reset your ranking")
-                console.log("El juego esta en pausa")
-            },
-        "reanudar": function (){
-            audio.resume();
-            setState(stored);
-        },
-        "getState": function () { return state; },
-        "PAUSE": PAUSE,
-        "PLAYING": PLAYING,
-        "WAITING": WAITING,
         enviarEvento: enviarEvento
     };
     
@@ -1532,13 +1515,6 @@ window.addEventListener("DOMContentLoaded", function () {
     boton2.addEventListener("click", function () {
         const estadoActual = PACMAN.getState();
 
-        if (estadoActual !== PACMAN.PAUSE) {
-            PACMAN.pausa();
-            console.log("Pausa");
-        } else {
-            PACMAN.reanudar();
-            console.log("Reanudado");
-        }
     });
 });
 
