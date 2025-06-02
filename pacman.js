@@ -1436,24 +1436,25 @@ var PACMAN = (function () {
 
 //.........................................ACA INICIA EL GIROSCOPIO...................................................................................
 
+
     if (window.DeviceOrientationEvent) {
       window.addEventListener('deviceorientation', function(event) {
+        const gamma = event.gamma;
+        const beta = event.beta;
         console.log('Alpha:', event.alpha);
-        if (event.beta < 80){
-            console.log("Mover hacia la derecha");
-            PACMAN.moveDown();
-        }
-        if (event.gamma > 20){
-            console.log("Mover hacia la derecha");
-            PACMAN.moveRight();
-        }
-        if (event.gamma > -20){
-            console.log("Mover hacia la izq");
-            PACMAN.moveLeft();
-        }
-        if (event.beta > 100){
-            console.log("Mover hacia la derecha");
-            PACMAN.moveUp();
+        if (Math.abs(gamma) > Math.abs(beta)){
+            if (gamma > 15) {
+                PACMAN.moveRight();
+            }
+            else if(gamma < -15){
+                PACMAN.moveLeft();
+            }
+        } else {
+            if (beta > 60){
+                PACMAN.moveDown();
+            } else if (beta < -60) {
+                PACMAN.moveUp();
+            }
         }
         
         console.log('Beta:', event.beta);
