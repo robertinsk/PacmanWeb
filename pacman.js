@@ -1427,6 +1427,8 @@ var PACMAN = (function () {
                             stopPropagation: () => {}
                         });
                     },
+        "Pausa": setState(PAUSE),
+        "Reanudar": setState(PLAYING),
         enviarEvento: enviarEvento
     };
     
@@ -1513,7 +1515,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     // Acción al hacer clic
     boton2.addEventListener("click", function () {
-        PACMAN.PAUSE;
+        Pausa();
         console.log("Pausa")
     });
 });
