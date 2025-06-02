@@ -1494,7 +1494,7 @@ window.addEventListener("DOMContentLoaded", function () {
     boton.style.fontSize = "20px";
     boton.style.padding = "10px 20px";
     boton.style.display = "block";
-    boton.style.margin = "0 auto";
+    boton.style.margin = "10px auto";
     document.body.appendChild(boton);
 
     // Crear botón
@@ -1503,7 +1503,7 @@ window.addEventListener("DOMContentLoaded", function () {
     boton.style.fontSize = "20px";
     boton.style.padding = "10px 20px";
     boton.style.display = "block";
-    boton.style.margin = "0 auto";
+    boton.style.margin = "10px auto";
     document.body.appendChild(boton2);
 
 
@@ -1517,8 +1517,8 @@ window.addEventListener("DOMContentLoaded", function () {
     });
 
     // Acción al hacer clic
-    boton.addEventListener("click", function () {
-        setState(PAUSE);
+    boton2.addEventListener("click", function () {
+        PACMAN.setState(PAUSE);
     });
 });
 
