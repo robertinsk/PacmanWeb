@@ -1427,7 +1427,7 @@ var PACMAN = (function () {
                             stopPropagation: () => {}
                         });
                     },
-        "Pausa": setState(),
+        "Pausa": setState(PAUSE),
         enviarEvento: enviarEvento
     };
     
