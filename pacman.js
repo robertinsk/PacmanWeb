@@ -1533,7 +1533,8 @@ window.addEventListener("DOMContentLoaded", function () {
         pausa = true
         if (pausa === true){
             PACMAN.reanudar();
-            console.log("REANUDO")
+            console.log("REANUDO");
+            pausa = false;
         }
     });
 });
