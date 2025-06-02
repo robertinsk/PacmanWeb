@@ -1399,6 +1399,13 @@ var PACMAN = (function () {
     return {
         "init" : init,
         "startNewGame" : startNewGame,
+        "moveRight": function () {
+                        user.keyDown({
+                            keyCode: KEY.ARROW_RIGHT,
+                            preventDefault: () => {},
+                            stopPropagation: () => {}
+                        });
+                    },
         enviarEvento: enviarEvento
     };
     
@@ -1412,7 +1419,7 @@ var PACMAN = (function () {
       window.addEventListener('deviceorientation', function(event) {
         console.log('Alpha:', event.alpha);
         if (event.alpha > 100){
-            PACMAN.ARROW_RIGHT
+            PACMAN.moveRight
         }
         console.log('Beta:', event.beta);
         console.log('Gamma:', event.gamma);
