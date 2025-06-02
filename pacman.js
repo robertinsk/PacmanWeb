@@ -1438,7 +1438,6 @@ var PACMAN = (function () {
             },
         "reanudar": function (){
             audio.resume();
-            map.draw(ctx);
             setState(stored);
         },
         "getState": function () { return state; },
