@@ -1393,6 +1393,7 @@ var PACMAN = (function () {
     
     return {
         "init" : init,
+        "startNewGame" : startNewGame,
         enviarEvento: enviarEvento
     };
     
