@@ -1452,7 +1452,7 @@ var PACMAN = (function () {
         } else {
             if (beta > 60){
                 PACMAN.moveDown();
-            } else if (beta < -60) {
+            } else if (beta < 30) {
                 PACMAN.moveUp();
             }
         }
