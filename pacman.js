@@ -1523,12 +1523,15 @@ window.addEventListener("DOMContentLoaded", function () {
         PACMAN.startNewGame();
     });
 
+    pausa = false
     // Acción al hacer clic
     boton2.addEventListener("click", function () {
         PACMAN.pausa();
         console.log("Pausa")
-        if (state !== PAUSE){
+        pausa = true
+        if (pausa === true){
             return user.keyDown(e);
+            console.log("REANUDO")
         }
     });
 });
