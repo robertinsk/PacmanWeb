@@ -1409,24 +1409,11 @@ var PACMAN = (function () {
 //.........................................ACA INICIA EL GIROSCOPIO...................................................................................
 
 // Función para detectar soporte del giroscopio
-function detectGyroscopeSupport() {
-    if (window.DeviceOrientationEvent) {
-        gyroscopeSupported = true;
-        console.log("Giroscopio soportado");
-        return true;
-    } else {
-        console.log("Giroscopio no soportado en este dispositivo");
-        return false;
-    }
-}
-
-// Función para habilitar el giroscopio
-function enableGyroscope() {
-    if (!gyroscopeSupported) return;
-    
-    gyroscopeEnabled = true;
-    window.addEventListener('deviceorientation', handleOrientation, true);
-    console.log("Giroscopio habilitado");
+// Función para deshabilitar el giroscopio
+function disableGyroscope() {
+    gyroscopeEnabled = false;
+    window.removeEventListener('deviceorientation', handleOrientation, true);
+    console.log("Giroscopio deshabilitado");
 }
 
 // Función para manejar la orientación del dispositivo
@@ -1485,6 +1472,217 @@ function getKeyCodeFromDirection(direction) {
     }
 }
 
+// Modificar la función keyDown existente para incluir controles del giroscopio
+function keyDown(e) {
+    if (e.keyCode === KEY.N) {
+        startNewGame();
+    } else if (e.keyCode === KEY.S) {
+        audio.disableSound();
+        localStorage["soundDisabled"] = !soundDisabled();
+    } else if (e.keyCode === KEY.G) { // Nueva tecla G para alternar giroscopio
+        if (gyroscopeSupported) {
+            if (gyroscopeEnabled) {
+                disableGyroscope();
+            } else {
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    requestGyroscopePermission();
+                } else {
+                    enableGyroscope();
+                }
+            }
+        } else {
+            console.log("Giroscopio no disponible en este dispositivo");
+        }
+    } else if (e.keyCode === KEY.P && state === PAUSE) {
+        audio.resume();
+        map.draw(ctx);
+        setState(stored);
+    } else if (e.keyCode === KEY.P) {
+        stored = state;
+        setState(PAUSE);
+        audio.pause();
+        map.draw(ctx);
+        dialog("Paused");
+        console.log("El juego esta en pausa")
+    } else if (state !== PAUSE) {   
+        return user.keyDown(e);
+    } else if (e.keyCode === KEY.R) {
+        var reseteo = 0;
+        localStorage.setItem("Fantasmas Comidos", reseteo)
+        localStorage.setItem("Vidas Perdidas", reseteo)
+        localStorage.setItem("Niveles Pasados", reseteo)
+    }
+    return true;
+}
+
+// Modificar la función drawFooter para mostrar el estado del giroscopio
+function drawFooter() {
+    var topLeft  = (map.height * map.blockSize),
+        textBase = topLeft + 17;
+    
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, topLeft, (map.width * map.blockSize), 30);
+    
+    ctx.fillStyle = "#FFFF00";
+
+    for (var i = 0, len = user.getLives(); i < len; i++) {
+        ctx.fillStyle = "#FFFF00";
+        ctx.beginPath();
+        ctx.moveTo(150 + (25 * i) + map.blockSize / 2,
+                   (topLeft+1) + map.blockSize / 2);
+        
+        ctx.arc(150 + (25 * i) + map.blockSize / 2,
+                (topLeft+1) + map.blockSize / 2,
+                map.blockSize / 2, Math.PI * 0.25, Math.PI * 1.75, false);
+        ctx.fill();
+    }
+
+    // Indicador de sonido
+    ctx.fillStyle = !soundDisabled() ? "#00FF00" : "#FF0000";
+    ctx.font = "bold 16px sans-serif";
+    ctx.fillText("S", 10, textBase);
+
+    // Indicador de giroscopio
+    if (gyroscopeSupported) {
+        ctx.fillStyle = gyroscopeEnabled ? "#00FF00" : "#FF0000";
+        ctx.font = "bold 16px sans-serif";
+        ctx.fillText("G", 30, textBase);
+    }
+
+    ctx.fillStyle = "#FFFF00";
+    ctx.font      = "14px BDCartoonShoutRegular";
+    ctx.fillText("Score: " + user.theScore(), 50, textBase);
+    ctx.fillText("Level: " + level, 260, textBase);
+}
+
+// Modificar la función dialog para incluir instrucciones del giroscopio
+function dialog(text) {
+    ctx.fillStyle = "#FFFF00";
+    ctx.font      = "14px BDCartoonShoutRegular";
+    var width = ctx.measureText(text).width,
+        x     = ((map.width * map.blockSize) - width) / 2;        
+    ctx.fillText(text, x, (map.height * 10) + 8);
+    
+    // Mostrar controles adicionales
+    if (text === "Press N to Start" || text.includes("Press N to start")) {
+        ctx.font = "10px BDCartoonShoutRegular";
+        var controlsText = "Controls: Arrows or Tilt Device (G to toggle gyroscope)";
+        var controlsWidth = ctx.measureText(controlsText).width;
+        var controlsX = ((map.width * map.blockSize) - controlsWidth) / 2;
+        ctx.fillText(controlsText, controlsX, (map.height * 10) + 25);
+    }
+}
+
+// Inicializar detección de giroscopio cuando se inicializa el juego
+function init(wrapper, root) {
+    var i, len, ghost,
+        blockSize = wrapper.offsetWidth / 19,
+        canvas    = document.createElement("canvas");
+    
+    canvas.setAttribute("width", (blockSize * 19) + "px");
+    canvas.setAttribute("height", (blockSize * 22) + 30 + "px");
+
+    wrapper.appendChild(canvas);
+
+    ctx  = canvas.getContext('2d');
+
+    // Detectar soporte de giroscopio
+    detectGyroscopeSupport();
+
+    audio = new Pacman.Audio({"soundDisabled":soundDisabled});
+    map   = new Pacman.Map(blockSize);
+    user  = new Pacman.User({ 
+        "completedLevel" : completedLevel, 
+        "eatenPill"      : eatenPill 
+    }, map);
+
+    for (i = 0, len = ghostSpecs.length; i < len; i += 1) {
+        ghost = new Pacman.Ghost({"getTick":getTick}, map, ghostSpecs[i]);
+        ghosts.push(ghost);
+    }
+    
+    map.draw(ctx);
+    dialog("Loading ...");
+
+    var extension = Modernizr.audio.ogg ? 'ogg' : 'mp3';
+
+    var audio_files = [
+        ["start", root + "audio/opening_song." + extension],
+        ["die", root + "audio/die." + extension],
+        ["eatghost", root + "audio/eatghost." + extension],
+        ["eatpill", root + "audio/eatpill." + extension],
+        ["eating", root + "audio/eating.short." + extension],
+        ["eating2", root + "audio/eating.short." + extension]
+    ];
+
+    load(audio_files, function() { loaded(); });
+}
+
+// Función para calibrar el giroscopio (opcional)
+function calibrateGyroscope() {
+    if (!gyroscopeEnabled) return;
+    
+    // Guardar la orientación actual como referencia
+    var calibrationTime = 1000; // 1 segundo para calibrar
+    var calibrationSamples = [];
+    
+    var calibrationInterval = setInterval(function() {
+        if (lastOrientation.beta !== 0 || lastOrientation.gamma !== 0) {
+            calibrationSamples.push({
+                beta: lastOrientation.beta,
+                gamma: lastOrientation.gamma
+            });
+        }
+    }, 100);
+    
+    setTimeout(function() {
+        clearInterval(calibrationInterval);
+        if (calibrationSamples.length > 0) {
+            // Calcular posición neutral promedio
+            var avgBeta = calibrationSamples.reduce((sum, sample) => sum + sample.beta, 0) / calibrationSamples.length;
+            var avgGamma = calibrationSamples.reduce((sum, sample) => sum + sample.gamma, 0) / calibrationSamples.length;
+            
+            console.log("Giroscopio calibrado - Beta:", avgBeta, "Gamma:", avgGamma);
+            // Aquí podrías ajustar los valores de referencia si es necesario
+        }
+    }, calibrationTime);
+}
+
+// Agregar evento para manejar la visibilidad de la página
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden && gyroscopeEnabled) {
+        // Pausar el giroscopio cuando la página no está visible
+        disableGyroscope();
+    } else if (!document.hidden && gyroscopeSupported) {
+        // Reactivar el giroscopio cuando la página vuelve a estar visible
+        // (solo si estaba habilitado antes)
+        if (localStorage.getItem('gyroscopeWasEnabled') === 'true') {
+            enableGyroscope();
+        }
+    }
+});
+
+// Guardar estado del giroscopio
+function saveGyroscopeState() {
+    localStorage.setItem('gyroscopeWasEnabled', gyroscopeEnabled.toString());
+}
+
+// Llamar a esta función cuando se habilite/deshabilite el giroscopio
+function enableGyroscope() {
+    if (!gyroscopeSupported) return;
+    
+    gyroscopeEnabled = true;
+    window.addEventListener('deviceorientation', handleOrientation, true);
+    saveGyroscopeState();
+    console.log("Giroscopio habilitado");
+}
+
+function disableGyroscope() {
+    gyroscopeEnabled = false;
+    window.removeEventListener('deviceorientation', handleOrientation, true);
+    saveGyroscopeState();
+    console.log("Giroscopio deshabilitado");
+}
 
 // AGREGADO DE BOTON
 
