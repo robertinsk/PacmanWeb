@@ -1499,16 +1499,11 @@ window.addEventListener("DOMContentLoaded", function () {
 
     // Crear botón
     const boton2 = document.createElement("button");
-    boton.innerText = "Pausa";
-    boton.style.fontSize = "20px";
-    boton.style.padding = "10px 20px";
-    boton.style.display = "block";
-    boton.style.margin = "10px auto";
-    document.body.appendChild(boton2);
-
-
-    // Agregar botón al body
-    document.body.appendChild(boton);
+    boton2.innerText = "Pausa";
+    boton2.style.fontSize = "20px";
+    boton2.style.padding = "10px 20px";
+    boton2.style.display = "block";
+    boton2.style.margin = "10px auto";
     document.body.appendChild(boton2);
 
     // Acción al hacer clic
