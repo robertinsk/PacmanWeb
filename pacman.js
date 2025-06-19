@@ -978,7 +978,7 @@ var PACMAN = (function () {
                     audio.play("eatghost");
                     navigator.vibrate(2000);
                     if ("vibrate" in navigator) {
-                        navigator.vibrate(2000);
+                        navigator.vibrate(500);
                     } else {
                         console.log("Vibración no soportada");
                     }
