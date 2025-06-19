@@ -1568,7 +1568,8 @@ window.addEventListener("DOMContentLoaded", function () {
             console.log("Reanudados");
         }
     });
-
+let activarGiroscopio = false;
+let orientacionHandler = null; // Referencia para removerlo después
     // Acción al hacer clic
     boton3.addEventListener("click", function () {
         activarGiroscopio = !activarGiroscopio;
