@@ -1467,19 +1467,17 @@ var PACMAN = (function () {
 //.........................................ACA INICIA EL DESLIZAMIENTO...................................................................................
 let startX, startY;
 
-// Detectar inicio del toque
-document.addEventListener('touchstart', function(e) {
+// Solo aplicar swipe al div del pacman
+document.getElementById('pacman').addEventListener('touchstart', function(e) {
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
 }, { passive: false });
 
-// Detectar movimiento y prevenir scroll
-document.addEventListener('touchmove', function(e) {
-    e.preventDefault(); // Previene el scroll y refresh
+document.getElementById('pacman').addEventListener('touchmove', function(e) {
+    e.preventDefault(); // Solo previene en el área del juego
 }, { passive: false });
 
-// Detectar fin del toque y calcular dirección
-document.addEventListener('touchend', function(e) {
+document.getElementById('pacman').addEventListener('touchend', function(e) {
     if (!startX || !startY) return;
     
     let endX = e.changedTouches[0].clientX;
@@ -1488,34 +1486,24 @@ document.addEventListener('touchend', function(e) {
     let diffX = startX - endX;
     let diffY = startY - endY;
     
-    // Prevenir comportamientos por defecto
     e.preventDefault();
     
-    // Swipe horizontal
+    // Tu código de swipe aquí...
     if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
         if (diffX > 0) {
-            // SWIPE IZQUIERDA
-            PACMAN.moveLeft();
-            
+            PACMAN.moveLeft();            
         } else {
-            // SWIPE DERECHA
             PACMAN.moveRight();            
         }
     }
-    // Swipe vertical
     else if (Math.abs(diffY) > 50) {
         if (diffY > 0) {
-            // SWIPE ARRIBA
-            PACMAN.moveUp();
-            
+            PACMAN.moveDown();            
         } else {
-            // SWIPE ABAJO
-            PACMAN.moveDown();
-            
+            PACMAN.moveUp();            
         }
     }
     
-    // Resetear valores
     startX = startY = null;
 }, { passive: false });
 

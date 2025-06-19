@@ -34,7 +34,7 @@
         visibility: hidden;
       }
       h1 { font-family: BDCartoonShoutRegular; text-align:center; }
-      html, body {
+      body {
         margin: 0;
         padding: 0;
         width: 100%;
@@ -43,9 +43,18 @@
         box-sizing: border-box;
         overscroll-behavior: none;
         -webkit-overflow-scrolling: touch;
-        touch-action: none;
       }
-      a { text-decoration:none; }
+      html{
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        box-sizing: border-box;
+        overscroll-behavior: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      a { text-decoration:none; touch-action: auto !important; }
       
       #ranking, #nombre {
       word-wrap: break-word;
@@ -59,10 +68,18 @@
       border-width: 5px;
       border-color: blue;
       border-radius: 10px;
+      touch-action: auto !important;
     }
       #borde {
         background-color: black;
         border-style: solid;
+      }
+      button{
+        touch-action: auto !important;
+      }
+      input{
+        touch-action: auto !important;
+
       }
     </style>
 
