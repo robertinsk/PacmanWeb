@@ -985,6 +985,11 @@ var PACMAN = (function () {
                     user.addScore(nScore);                    
                     setState(EATEN_PAUSE);
                     timerStart = tick;
+                    if ("vibrate" in navigator) {
+                        navigator.vibrate(200);
+                    } else {
+                        console.log("Vibración no soportada");
+                    }
 
                 } else if (ghosts[i].isDangerous()) {
                     audio.play("die");
