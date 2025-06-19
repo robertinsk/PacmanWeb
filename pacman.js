@@ -1461,47 +1461,97 @@ var PACMAN = (function () {
 
 
 //.........................................ACA INICIA EL GIROSCOPIO...................................................................................
-
-
-    if (window.DeviceOrientationEvent) {
-      window.addEventListener('deviceorientation', function(event) {
-        const gamma = event.gamma;
-        const beta = event.beta;
-        console.log('Alpha:', event.alpha);
-        if (Math.abs(gamma) > Math.abs(beta)){
-            if (gamma > 15) {
-                PACMAN.moveRight();
+activarGiroscopio = true;
+    if (activarGiroscopio === true){
+        if (window.DeviceOrientationEvent) {
+        window.addEventListener('deviceorientation', function(event) {
+            const gamma = event.gamma;
+            const beta = event.beta;
+            console.log('Alpha:', event.alpha);
+            if (Math.abs(gamma) > Math.abs(beta)){
+                if (gamma > 15) {
+                    PACMAN.moveRight();
+                }
+                else if(gamma < -15){
+                    PACMAN.moveLeft();
+                }
+            } else {
+                if (beta > 60){
+                    PACMAN.moveDown();
+                } else if (beta < 40) {
+                    PACMAN.moveUp();
+                }
             }
-            else if(gamma < -15){
-                PACMAN.moveLeft();
-            }
+            console.log('Beta:', event.beta);
+            console.log('Gamma:', event.gamma);
+        });
         } else {
-            if (beta > 60){
-                PACMAN.moveDown();
-            } else if (beta < 40) {
-                PACMAN.moveUp();
+        console.log('La API de eventos de orientación no es compatible.');
+        }
+
+        if (window.Gyroscope) {
+            const gyroscope = new Gyroscope({
+                referenceFrame: 'device' // Opcional: Define el sistema de referencia
+            });
+
+            gyroscope.addEventListener('reading', (event) => {
+                console.log('X:', event.target.reading.x);
+                console.log('Y:', event.target.reading.y);
+                console.log('Z:', event.target.reading.z);
+            });
+        } else {
+        console.log('La API de sensores genéricos no es compatible.');
+        }
+    }
+//.........................................ACA TERMINA EL GIROSCOPIO...................................................................................
+
+//.........................................ACA INICIA EL DESLIZAMIENTO...................................................................................
+    let startX, startY;
+
+    // Detectar inicio del toque
+    document.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+    });
+
+    // Detectar fin del toque y calcular dirección
+    document.addEventListener('touchend', function(e) {
+        if (!startX || !startY) return;
+        
+        let endX = e.changedTouches[0].clientX;
+        let endY = e.changedTouches[0].clientY;
+        
+        let diffX = startX - endX;
+        let diffY = startY - endY;
+        
+        // Swipe horizontal
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+            if (diffX > 0) {
+                // SWIPE IZQUIERDA
+                PACMAN.moveLeft();
+                
+            } else {
+                // SWIPE DERECHA
+                PACMAN.moveRight();
+                
             }
         }
-        console.log('Beta:', event.beta);
-        console.log('Gamma:', event.gamma);
-      });
-    } else {
-      console.log('La API de eventos de orientación no es compatible.');
-    }
-
-    if (window.Gyroscope) {
-        const gyroscope = new Gyroscope({
-            referenceFrame: 'device' // Opcional: Define el sistema de referencia
-        });
-
-        gyroscope.addEventListener('reading', (event) => {
-            console.log('X:', event.target.reading.x);
-            console.log('Y:', event.target.reading.y);
-            console.log('Z:', event.target.reading.z);
-        });
-    } else {
-      console.log('La API de sensores genéricos no es compatible.');
-    }
+        // Swipe vertical
+        else if (Math.abs(diffY) > 50) {
+            if (diffY > 0) {
+                // SWIPE ARRIBA
+                PACMAN.moveUp();
+                
+            } else {
+                // SWIPE ABAJO
+                PACMAN.moveDown();
+                
+            }
+        }
+        
+        // Resetear valores
+        startX = startY = null;
+    });
 
 // AGREGADO DE BOTON
 
@@ -1532,6 +1582,16 @@ window.addEventListener("DOMContentLoaded", function () {
     boton2.style.margin = "10px auto";
     document.body.appendChild(boton2);
 
+    // Crear botón
+    const boton3 = document.createElement("button");
+    boton3.innerText = "Activar/Desactivar Giroscopio";
+    boton3.style.fontSize = "20px";
+    boton3.style.padding = "10px 20px";
+    boton3.style.display = "block";
+    boton3.style.margin = "10px auto";
+    document.body.appendChild(boton3);
+
+
     // Acción al hacer clic
     boton.addEventListener("click", function () {
         PACMAN.startNewGame();
@@ -1548,6 +1608,11 @@ window.addEventListener("DOMContentLoaded", function () {
             PACMAN.reanudar();
             console.log("Reanudados");
         }
+    });
+
+    // Acción al hacer clic
+    boton3.addEventListener("click", function () {
+        activarGiroscopio = !activarGiroscopio;
     });
 });
 
