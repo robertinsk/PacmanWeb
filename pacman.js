@@ -1459,11 +1459,6 @@ var PACMAN = (function () {
 }());
 
 
-
-//.........................................ACA INICIA EL GIROSCOPIO...................................................................................
-
-//.........................................ACA TERMINA EL GIROSCOPIO...................................................................................
-
 //.........................................ACA INICIA EL DESLIZAMIENTO...................................................................................
 let startX, startY;
 
@@ -1563,6 +1558,9 @@ window.addEventListener("DOMContentLoaded", function () {
             console.log("Reanudados");
         }
     });
+
+//.........................................ACA INICIA EL GIROSCOPIO...................................................................................
+
 let activarGiroscopio = false;
 let orientacionHandler = null; // Referencia para removerlo después
     // Acción al hacer clic
