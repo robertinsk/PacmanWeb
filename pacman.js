@@ -892,11 +892,6 @@ var PACMAN = (function () {
     
     var vidaPerdida = 0;
     function loseLife() {        
-        if ("vibrate" in navigator) {
-            navigator.vibrate(500);
-        } else {
-            console.log("Vibración no soportada");
-        }
         setState(WAITING);
         user.loseLife();
         vidaPerdida += 1;
@@ -997,6 +992,11 @@ var PACMAN = (function () {
                     timerStart = tick;
                 } else if (ghosts[i].isDangerous()) {
                     audio.play("die");
+                    if ("vibrate" in navigator) {
+                        navigator.vibrate(500);
+                    } else {
+                        console.log("Vibración no soportada");
+                    }
                     setState(DYING);
                     timerStart = tick;
                 }
