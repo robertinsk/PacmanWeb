@@ -976,6 +976,12 @@ var PACMAN = (function () {
             if (collided(userPos, ghostPos[i]["new"])) {
                 if (ghosts[i].isVunerable()) { 
                     audio.play("eatghost");
+                    navigator.vibrate(2000);
+                    if ("vibrate" in navigator) {
+                        navigator.vibrate(2000);
+                    } else {
+                        console.log("Vibración no soportada");
+                    }
                     ghosts[i].eat();
                     eatenCount += 1;
                     nScore = eatenCount * 50;
@@ -985,12 +991,6 @@ var PACMAN = (function () {
                     user.addScore(nScore);                    
                     setState(EATEN_PAUSE);
                     timerStart = tick;
-                    if ("vibrate" in navigator) {
-                        navigator.vibrate(200);
-                    } else {
-                        console.log("Vibración no soportada");
-                    }
-
                 } else if (ghosts[i].isDangerous()) {
                     audio.play("die");
                     setState(DYING);
