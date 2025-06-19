@@ -1461,48 +1461,7 @@ var PACMAN = (function () {
 
 
 //.........................................ACA INICIA EL GIROSCOPIO...................................................................................
-activarGiroscopio = true;
-    if (activarGiroscopio === true){
-        if (window.DeviceOrientationEvent) {
-        window.addEventListener('deviceorientation', function(event) {
-            const gamma = event.gamma;
-            const beta = event.beta;
-            console.log('Alpha:', event.alpha);
-            if (Math.abs(gamma) > Math.abs(beta)){
-                if (gamma > 15) {
-                    PACMAN.moveRight();
-                }
-                else if(gamma < -15){
-                    PACMAN.moveLeft();
-                }
-            } else {
-                if (beta > 60){
-                    PACMAN.moveDown();
-                } else if (beta < 40) {
-                    PACMAN.moveUp();
-                }
-            }
-            console.log('Beta:', event.beta);
-            console.log('Gamma:', event.gamma);
-        });
-        } else {
-        console.log('La API de eventos de orientación no es compatible.');
-        }
 
-        if (window.Gyroscope) {
-            const gyroscope = new Gyroscope({
-                referenceFrame: 'device' // Opcional: Define el sistema de referencia
-            });
-
-            gyroscope.addEventListener('reading', (event) => {
-                console.log('X:', event.target.reading.x);
-                console.log('Y:', event.target.reading.y);
-                console.log('Z:', event.target.reading.z);
-            });
-        } else {
-        console.log('La API de sensores genéricos no es compatible.');
-        }
-    }
 //.........................................ACA TERMINA EL GIROSCOPIO...................................................................................
 
 //.........................................ACA INICIA EL DESLIZAMIENTO...................................................................................
@@ -1613,6 +1572,41 @@ window.addEventListener("DOMContentLoaded", function () {
     // Acción al hacer clic
     boton3.addEventListener("click", function () {
         activarGiroscopio = !activarGiroscopio;
+
+        if (activarGiroscopio) {
+            console.log("🎮 Giroscopio ACTIVADO");
+
+            // Definir función por separado para poder quitarla luego
+            orientacionHandler = function (event) {
+                const gamma = event.gamma;
+                const beta = event.beta;
+
+                if (Math.abs(gamma) > Math.abs(beta)) {
+                    if (gamma > 15) {
+                        PACMAN.moveRight();
+                    } else if (gamma < -15) {
+                        PACMAN.moveLeft();
+                    }
+                } else {
+                    if (beta > 60) {
+                        PACMAN.moveDown();
+                    } else if (beta < 40) {
+                        PACMAN.moveUp();
+                    }
+                }
+            };
+
+            window.addEventListener("deviceorientation", orientacionHandler);
+
+        } else {
+            console.log("🛑 Giroscopio DESACTIVADO");
+
+            // Quitar el evento
+            if (orientacionHandler) {
+                window.removeEventListener("deviceorientation", orientacionHandler);
+                orientacionHandler = null;
+            }
+        }
     });
 });
 
