@@ -1584,6 +1584,8 @@ let orientacionHandler = null; // Referencia para removerlo después
         if (activarGiroscopio) {
             console.log("🎮 Giroscopio ACTIVADO");
 
+            boton3.style.backgroundColor ="green"
+
             // Definir función por separado para poder quitarla luego
             orientacionHandler = function (event) {
                 const gamma = event.gamma;
@@ -1603,11 +1605,12 @@ let orientacionHandler = null; // Referencia para removerlo después
                     }
                 }
             };
-
+            
             window.addEventListener("deviceorientation", orientacionHandler);
 
         } else {
             console.log("🛑 Giroscopio DESACTIVADO");
+            boton3.style.backgroundColor ="red"
 
             // Quitar el evento
             if (orientacionHandler) {
