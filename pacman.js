@@ -892,13 +892,13 @@ var PACMAN = (function () {
     
     var vidaPerdida = 0;
     function loseLife() {        
-        setState(WAITING);
-        user.loseLife();
         if ("vibrate" in navigator) {
             navigator.vibrate(500);
         } else {
             console.log("Vibración no soportada");
         }
+        setState(WAITING);
+        user.loseLife();
         vidaPerdida += 1;
         if (user.getLives() > 0) {
             startLevel();
