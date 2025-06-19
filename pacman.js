@@ -1512,7 +1512,7 @@ window.addEventListener("DOMContentLoaded", function () {
 
     // Crear botón
     const boton = document.createElement("button");
-    boton.innerText = "Iniciar nuevo juego (te amo meme)";
+    boton.innerText = "Iniciar nuevo juego";
     boton.style.fontSize = "20px";
     boton.style.padding = "10px 20px";
     boton.style.display = "block";
