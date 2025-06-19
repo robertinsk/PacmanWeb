@@ -894,6 +894,11 @@ var PACMAN = (function () {
     function loseLife() {        
         setState(WAITING);
         user.loseLife();
+        if ("vibrate" in navigator) {
+            navigator.vibrate(500);
+        } else {
+            console.log("Vibración no soportada");
+        }
         vidaPerdida += 1;
         if (user.getLives() > 0) {
             startLevel();
@@ -976,7 +981,6 @@ var PACMAN = (function () {
             if (collided(userPos, ghostPos[i]["new"])) {
                 if (ghosts[i].isVunerable()) { 
                     audio.play("eatghost");
-                    navigator.vibrate(2000);
                     if ("vibrate" in navigator) {
                         navigator.vibrate(500);
                     } else {
