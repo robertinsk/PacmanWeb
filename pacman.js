@@ -1465,52 +1465,59 @@ var PACMAN = (function () {
 //.........................................ACA TERMINA EL GIROSCOPIO...................................................................................
 
 //.........................................ACA INICIA EL DESLIZAMIENTO...................................................................................
-    let startX, startY;
+let startX, startY;
 
-    // Detectar inicio del toque
-    document.addEventListener('touchstart', function(e) {
-        startX = e.touches[0].clientX;
-        startY = e.touches[0].clientY;
-    });
+// Detectar inicio del toque
+document.addEventListener('touchstart', function(e) {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+}, { passive: false });
 
-    // Detectar fin del toque y calcular dirección
-    document.addEventListener('touchend', function(e) {
-        if (!startX || !startY) return;
-        
-        let endX = e.changedTouches[0].clientX;
-        let endY = e.changedTouches[0].clientY;
-        
-        let diffX = startX - endX;
-        let diffY = startY - endY;
-        
-        // Swipe horizontal
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-            if (diffX > 0) {
-                // SWIPE IZQUIERDA
-                PACMAN.moveLeft();
-                
-            } else {
-                // SWIPE DERECHA
-                PACMAN.moveRight();
-                
-            }
+// Detectar movimiento y prevenir scroll
+document.addEventListener('touchmove', function(e) {
+    e.preventDefault(); // Previene el scroll y refresh
+}, { passive: false });
+
+// Detectar fin del toque y calcular dirección
+document.addEventListener('touchend', function(e) {
+    if (!startX || !startY) return;
+    
+    let endX = e.changedTouches[0].clientX;
+    let endY = e.changedTouches[0].clientY;
+    
+    let diffX = startX - endX;
+    let diffY = startY - endY;
+    
+    // Prevenir comportamientos por defecto
+    e.preventDefault();
+    
+    // Swipe horizontal
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+        if (diffX > 0) {
+            // SWIPE IZQUIERDA
+            PACMAN.moveLeft();
+            
+        } else {
+            // SWIPE DERECHA
+            PACMAN.moveRight();            
         }
-        // Swipe vertical
-        else if (Math.abs(diffY) > 50) {
-            if (diffY > 0) {
-                // SWIPE ARRIBA
-                PACMAN.moveUp();
-                
-            } else {
-                // SWIPE ABAJO
-                PACMAN.moveDown();
-                
-            }
+    }
+    // Swipe vertical
+    else if (Math.abs(diffY) > 50) {
+        if (diffY > 0) {
+            // SWIPE ARRIBA
+            PACMAN.moveUp();
+            
+        } else {
+            // SWIPE ABAJO
+            PACMAN.moveDown();
+            
         }
-        
-        // Resetear valores
-        startX = startY = null;
-    });
+    }
+    
+    // Resetear valores
+    startX = startY = null;
+}, { passive: false });
 
 // AGREGADO DE BOTON
 
