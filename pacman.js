@@ -1498,9 +1498,9 @@ document.getElementById('pacman').addEventListener('touchend', function(e) {
     }
     else if (Math.abs(diffY) > 50) {
         if (diffY > 0) {
-            PACMAN.moveDown();            
-        } else {
             PACMAN.moveUp();            
+        } else {
+            PACMAN.moveDown();         
         }
     }
     
